@@ -1,3 +1,6 @@
+import 'package:final_project/tools/curveRanging.dart';
+import 'package:final_project/tools/levelling.dart';
+import 'package:final_project/tools/traversing.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 
@@ -196,9 +199,27 @@ class _HomePageState extends State<HomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Expanded(child: itemCard(title: 'Levelling')),
-                  Expanded(child: itemCard(title: 'Traversing')),
-                  Expanded(child: itemCard(title: 'Curve Ranging'))
+                  Expanded(
+                      child: itemCard(
+                          title: 'Levelling',
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Levelling()));
+                          })),
+                  Expanded(
+                      child: itemCard(
+                          title: 'Traversing',
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Traversing()));
+                          })),
+                  Expanded(
+                      child: itemCard(
+                          title: 'Curve Ranging',
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => CurveRanging()));
+                          }))
                 ],
               ),
               SizedBox(
