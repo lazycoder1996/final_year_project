@@ -62,6 +62,36 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Berkshire
+      fonts:
+        - asset: assets/fonts/BerkshireSwash-Regular.ttf
+    - family: Caveat
+      fonts:
+        - asset: assets/fonts/Caveat-Bold.ttf
+        - asset: assets/fonts/Caveat-Medium.ttf
+        - asset: assets/fonts/Caveat-Regular.ttf
+        - asset: assets/fonts/Caveat-SemiBold.ttf
+        - asset: assets/fonts/Caveat-VariableFont_wght.ttf
+    - family: IndieFlower
+      fonts:
+        - asset: assets/fonts/IndieFlower-Regular.ttf
+    - family: Satisfy
+      fonts:
+        - asset: assets/fonts/Satisfy-Regular.ttf
+    - family: Akaya
+      fonts:
+        - asset: assets/fonts/AkayaTelivigala-Regular.ttf
+    - family: Medieval
+      fonts:
+        - asset: assets/fonts/MedievalSharp-Regular.ttf
+    - family: Inika
+      fonts:
+        - asset: assets/fonts/Inika-Bold.ttf
+        - asset: assets/fonts/Inika-Regular.ttf
+    - family: Redressed
+      fonts:
+        - asset: assets/fonts/Redressed-Regular.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
