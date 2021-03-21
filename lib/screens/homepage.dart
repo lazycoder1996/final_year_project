@@ -56,8 +56,10 @@ class _HomePageState extends State<HomePage> {
                       (Set<MaterialState> states) {
                     if (states.contains(MaterialState.hovered))
                       return TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold);
-                    return TextStyle(fontSize: 18);
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Medieval');
+                    return TextStyle(fontSize: 18, fontFamily: 'Inika');
                   }),
                   foregroundColor: MaterialStateProperty.resolveWith(
                       ((Set<MaterialState> states) {
@@ -75,8 +77,10 @@ class _HomePageState extends State<HomePage> {
                       (Set<MaterialState> states) {
                     if (states.contains(MaterialState.hovered))
                       return TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold);
-                    return TextStyle(fontSize: 18);
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Medieval');
+                    return TextStyle(fontSize: 18, fontFamily: 'Inika');
                   }),
                   foregroundColor: MaterialStateProperty.resolveWith(
                       ((Set<MaterialState> states) {
@@ -95,8 +99,10 @@ class _HomePageState extends State<HomePage> {
                       (Set<MaterialState> states) {
                     if (states.contains(MaterialState.hovered))
                       return TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold);
-                    return TextStyle(fontSize: 18);
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Medieval');
+                    return TextStyle(fontSize: 18, fontFamily: 'Inika');
                   }),
                   foregroundColor: MaterialStateProperty.resolveWith(
                       ((Set<MaterialState> states) {
@@ -159,6 +165,9 @@ class _HomePageState extends State<HomePage> {
                     indicatorBgPadding: 5,
                     dotBgColor: Colors.teal,
                     showIndicator: true,
+                    autoplayDuration: Duration(seconds: 4),
+                    animationDuration: Duration(milliseconds: 400),
+                    animationCurve: Curves.easeInQuint,
                     images: [
                       Image.asset(
                         'images/theo.jpeg',
@@ -178,8 +187,9 @@ class _HomePageState extends State<HomePage> {
                     'Hello There!',
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold),
+                        fontSize: 34,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Redressed'),
                   ),
                 ),
               ),
@@ -188,7 +198,10 @@ class _HomePageState extends State<HomePage> {
               ),
               Center(
                   child: Text('You are few clicks away from enjoying...',
-                      style: TextStyle(fontSize: 22, color: Colors.black87))),
+                      style: TextStyle(
+                          fontSize: 26,
+                          color: Colors.black87,
+                          fontFamily: 'Redressed'))),
               SizedBox(
                 height: 15,
                 width: 300,
@@ -227,7 +240,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    color: Colors.black45,
+                    color: Colors.grey[400],
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10))),
@@ -238,29 +251,49 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 5.0),
-                        child: Text(
+                        child: SelectableText(
                           'CONTACT',
-                          style: TextStyle(color: Colors.white70, fontSize: 26),
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 26,
+                              fontFamily: 'Akaya'),
                         ),
                       ),
                       SizedBox(
                         height: 20,
                       ),
-                      Text('Kwame Nkrumah University of Science and Technology',
-                          style: TextStyle(fontSize: 20)),
+                      SelectableText(
+                          'Kwame Nkrumah University of Science and Technology',
+                          toolbarOptions:
+                              ToolbarOptions(copy: true, selectAll: true),
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontFamily: 'Caveat',
+                              color: Colors.black)),
                       SizedBox(
                         height: 10,
                       ),
-                      Text('Department of Geomatic Engineering',
-                          style: TextStyle(fontSize: 20)),
+                      SelectableText('Department of Geomatic Engineering',
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontFamily: 'Caveat',
+                              color: Colors.black)),
                       SizedBox(
                         height: 10,
                       ),
-                      Text('Kumasi - Ghana', style: TextStyle(fontSize: 20)),
+                      SelectableText('Kumasi - Ghana',
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontFamily: 'Caveat',
+                              color: Colors.black)),
                       SizedBox(
                         height: 10,
                       ),
-                      Text('someone@gmail.com', style: TextStyle(fontSize: 20))
+                      SelectableText('geomaticeng@knust.edu.gh',
+                          style: TextStyle(
+                              fontSize: 22,
+                              fontFamily: 'Caveat',
+                              color: Colors.black))
                     ],
                   ),
                 ),
@@ -304,16 +337,16 @@ class _HomePageState extends State<HomePage> {
                   height: 80,
                   child: Center(
                     child: Text(
-                      title,
+                      title.toUpperCase(),
                       style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 25,
                           color: textColor,
-                          fontWeight: FontWeight.bold),
+                          fontFamily: 'Berkshire'),
                     ),
                   )),
               SizedBox(
                 child: Divider(
-                  color: textColor,
+                  color: Colors.white,
                 ),
                 width: 300,
               ),
@@ -325,5 +358,5 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Color textColor = Colors.teal[100];
+  Color textColor = Colors.lightGreenAccent[900];
 }
