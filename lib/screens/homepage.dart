@@ -289,11 +289,15 @@ class _HomePageState extends State<HomePage> {
                       SizedBox(
                         height: 10,
                       ),
-                      SelectableText('geomaticeng@knust.edu.gh',
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontFamily: 'Caveat',
-                              color: Colors.black))
+                      InkWell(
+                        onTap: () {},
+                        hoverColor: Colors.white,
+                        child: Text('geomaticeng@knust.edu.gh',
+                            style: TextStyle(
+                                fontSize: 22,
+                                fontFamily: 'Caveat',
+                                color: Colors.black)),
+                      )
                     ],
                   ),
                 ),
