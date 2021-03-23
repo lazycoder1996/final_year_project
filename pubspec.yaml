@@ -22,6 +22,7 @@ environment:
 
 dependencies:
   carousel_pro: ^1.0.0
+  youtube_player_iframe: ^1.2.0+2
   flutter:
     sdk: flutter
 
