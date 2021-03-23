@@ -11,6 +11,10 @@ class _LevellingState extends State<Levelling> {
   void runYoutubeApp() {
     _controller = YoutubePlayerController(
       initialVideoId: 'j8poe2vvD2Q',
+      params: YoutubePlayerParams(
+        showControls: true,
+        showFullscreenButton: false,
+      ),
     );
   }
 
@@ -22,15 +26,12 @@ class _LevellingState extends State<Levelling> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     const player = YoutubePlayerIFrame();
     return YoutubePlayerControllerProvider(
       controller: _controller,
       child: Scaffold(
-        body: Container(
-          child: ListView(
-            children: [player],
-          ),
-        ),
+        body: Container(width: size.width, child: player),
       ),
     );
   }
