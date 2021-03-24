@@ -1,6 +1,7 @@
 import 'package:final_project/tools/curveRanging.dart';
 import 'package:final_project/tools/levelling.dart';
 import 'package:final_project/tools/traversing.dart';
+import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
 
@@ -45,114 +46,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TextButton(
-              child: Text('HOME'),
-              style: ButtonStyle(
-                  textStyle: MaterialStateProperty.resolveWith(
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.hovered))
-                      return TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Medieval');
-                    return TextStyle(fontSize: 18, fontFamily: 'Inika');
-                  }),
-                  foregroundColor: MaterialStateProperty.resolveWith(
-                      ((Set<MaterialState> states) {
-                    if (states.contains(MaterialState.hovered))
-                      return Colors.black;
-                    return Colors.white;
-                  })),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.teal)),
-              onPressed: () {},
-            ),
-            TextButton(
-              style: ButtonStyle(
-                  textStyle: MaterialStateProperty.resolveWith(
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.hovered))
-                      return TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Medieval');
-                    return TextStyle(fontSize: 18, fontFamily: 'Inika');
-                  }),
-                  foregroundColor: MaterialStateProperty.resolveWith(
-                      ((Set<MaterialState> states) {
-                    if (states.contains(MaterialState.hovered))
-                      return Colors.black;
-                    return Colors.white;
-                  })),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.teal)),
-              child: Text('ABOUT'),
-              onPressed: () {},
-            ),
-            TextButton(
-              style: ButtonStyle(
-                  textStyle: MaterialStateProperty.resolveWith(
-                      (Set<MaterialState> states) {
-                    if (states.contains(MaterialState.hovered))
-                      return TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Medieval');
-                    return TextStyle(fontSize: 18, fontFamily: 'Inika');
-                  }),
-                  foregroundColor: MaterialStateProperty.resolveWith(
-                      ((Set<MaterialState> states) {
-                    if (states.contains(MaterialState.hovered))
-                      return Colors.black;
-                    return Colors.white;
-                  })),
-                  backgroundColor:
-                      MaterialStateProperty.all<Color>(Colors.teal)),
-              child: Text('CONTACT US'),
-              onPressed: () {},
-            ),
-            SizedBox(
-              width: 30,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: Container(
-                width: 300,
-                height: 150,
-                alignment: Alignment.center,
-                child: Form(
-                  child: TextFormField(
-                    cursorColor: Colors.black,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.teal.shade900)),
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.teal.shade800)),
-                        hintText: '  Search here',
-                        hintStyle: TextStyle(color: Colors.white),
-                        suffixIcon: Padding(
-                          padding: const EdgeInsets.only(right: 5.0),
-                          child: IconButton(
-                            icon: Icon(Icons.search),
-                            onPressed: () {},
-                            color: Colors.white,
-                            splashRadius: 20.0,
-                          ),
-                        )),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: myAppBar(),
       body: Scrollbar(
         isAlwaysShown: true,
         child: SingleChildScrollView(
