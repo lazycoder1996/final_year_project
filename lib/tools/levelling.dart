@@ -14,6 +14,8 @@ class _LevellingState extends State<Levelling> {
       params: YoutubePlayerParams(
         showControls: true,
         showFullscreenButton: false,
+        autoPlay: false,
+        enableKeyboard: true,
       ),
     );
   }
