@@ -22,7 +22,12 @@ environment:
 
 dependencies:
   carousel_pro: ^1.0.0
-  youtube_player_iframe: ^1.2.0+2
+  csv: ^5.0.0
+  file_access: ^1.0.3
+  # file_picker: ^3.0.0
+  # file_picker_cross: ^4.3.0
+  grizzly_io: ^2.2.2
+  path: ^1.8.0
   flutter:
     sdk: flutter
 
@@ -93,6 +98,12 @@ flutter:
     - family: Redressed
       fonts:
         - asset: assets/fonts/Redressed-Regular.ttf
+    - family: Maths
+      fonts:
+        - asset: assets/fonts/math_variable.ttf
+    - family: Latex
+      fonts:
+        - asset: assets/fonts/cmunssdc.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
