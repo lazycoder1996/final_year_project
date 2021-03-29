@@ -65,11 +65,31 @@ PreferredSizeWidget myAppBar() {
           child: Text('CONTACT US'),
           onPressed: () {},
         ),
-        SizedBox(
-          width: 30,
+        TextButton(
+          style: ButtonStyle(
+              textStyle: MaterialStateProperty.resolveWith(
+                  (Set<MaterialState> states) {
+                if (states.contains(MaterialState.hovered))
+                  return TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Medieval');
+                return TextStyle(fontSize: 18, fontFamily: 'Inika');
+              }),
+              foregroundColor: MaterialStateProperty.resolveWith(
+                  ((Set<MaterialState> states) {
+                if (states.contains(MaterialState.hovered)) return Colors.black;
+                return Colors.white;
+              })),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.teal)),
+          child: Text('DOCUMENTATION'),
+          onPressed: () {},
         ),
+        SizedBox(
+            // width: 30,
+            ),
         Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
           child: Container(
             width: 300,
             height: 150,
