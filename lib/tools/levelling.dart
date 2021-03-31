@@ -32,21 +32,60 @@ class _LevellingState extends State<Levelling> {
 
   String _fileName;
 
+  void extractHeaders(String file) {
+    setState(() {
+      dataPicked = true;
+      levelData = [];
+      levelData = csvToList(file);
+      headers = levelData[0].map((e) {
+        return e.toString();
+      }).toList();
+      backsightDropDownValue = headers[0].toString();
+
+      if (radioValue == LevellingType.single_run) {
+        intersightDropDownValue = headers[1].toString();
+        foresightDropDownValue = headers[2].toString();
+      } else {
+        foresightDropDownValue = headers[1].toString();
+        upperStadiaValue = headers[2].toString();
+        middleStadiaValue = headers[3].toString();
+        lowerStadiaValue = headers[4].toString();
+        digitalReadingValue = headers[5].toString();
+      }
+    });
+  }
+
+  String dataFile;
   List<List<dynamic>> levelData = [];
   void chooseFile() async {
     final _myFile = await openFile();
     if (_myFile != null) {
-      final _output = await _myFile.readAsString();
-      _fileName = _myFile.path;
-      setState(() {
-        dataPicked = true;
-        levelData = csvToList(_output);
-        headers = levelData[0].map((e) {
-          return e.toString();
-        }).toList();
-        backsightDropDownValue = headers[0].toString();
-        intersightDropDownValue = headers[1].toString();
-        foresightDropDownValue = headers[2].toString();
+      await _myFile.readAsString().then((file) {
+        _fileName = _myFile.path;
+        setState(() {
+          dataFile = file;
+        });
+        extractHeaders(file);
+      }, onError: (error) {
+        print(error.toString());
+        showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: Text('An error occurred'),
+                content: Text(
+                    'The selected file is not a csv type. Please try again'),
+                actions: [
+                  TextButton(
+                    child: Text('Return'),
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                  ),
+                ],
+              );
+            });
       });
     } else {
       print('user cancelled operation');
@@ -59,7 +98,73 @@ class _LevellingState extends State<Levelling> {
   bool computationsDone = false;
   List dataHeadings = [];
 
-  void levelComputation() {
+  void clearData() {}
+  void preciseComputation() {
+    // Extracting data
+    int upperReading = headers.indexOf(upperStadiaValue);
+    int middleReading = headers.indexOf(middleStadiaValue);
+    int lowerReading = headers.indexOf(lowerStadiaValue);
+    int digitalReading = headers.indexOf(digitalReadingValue);
+
+    // Computing X
+    levelData[0].insert(5, 'X');
+    for (var i in levelData.sublist(1)) {
+      i.insert(
+          5,
+          ((double.parse(i[upperReading].toString()) +
+                      double.parse(i[lowerReading].toString())) /
+                  2)
+              .toStringAsFixed(3));
+    }
+    // 'bs,fs,u,m,l,x,d'
+    // Computing C values
+    levelData[0].add('C');
+    for (var i in levelData.sublist(1)) {
+      i.add(((double.parse(i[middleReading].toString()) +
+                  double.parse(i[5].toString()) +
+                  double.parse(i[digitalReading + 1].toString())) /
+              3)
+          .toStringAsFixed(3));
+    }
+
+    // Computing rise and fall
+    levelData[0].add('Rise or Fall');
+    try {
+      for (int i = 1; i <= levelData.length; i = i + 2) {
+        var rise = double.parse(levelData[i].last) -
+            double.parse(levelData[i + 1].last);
+        levelData[i + 1].add(rise.toStringAsFixed(3));
+        levelData[i].add("");
+      }
+    } catch (d) {}
+
+    double reducedLevel;
+    levelData[1].add(double.parse(initialBm.text.trim()));
+    levelData[0].add('Reduced Level');
+    try {
+      for (int a = 2; a <= levelData.length; a = a + 2) {
+        if (a == 2) {
+          levelData[a + 1].add("");
+          reducedLevel = double.parse(levelData[a - 1][9].toString()) +
+              double.parse(levelData[a][8].toString());
+          levelData[a].add(reducedLevel.toStringAsFixed(3));
+        }
+        if (a % 2 == 0 && a != 2) {
+          if (a != levelData.length - 1) levelData[a + 1].add("");
+          reducedLevel = double.parse(levelData[a - 2][9].toString()) +
+              double.parse(levelData[a][8].toString());
+          levelData[a].add(reducedLevel.toStringAsFixed(3));
+        }
+      }
+    } catch (e) {}
+    setState(() {
+      dataHeadings = levelData[0];
+      computationsDone = true;
+    });
+  }
+
+  void simpleComputation() {
+    extractHeaders(dataFile);
     // defining variables
     List backSight = [];
     List interSight = [];
@@ -430,7 +535,7 @@ class _LevellingState extends State<Levelling> {
     // Adding results to myData
     try {
       n = 0;
-      while (n <= size) {
+      while (n < size) {
         // Adding adjustment and final reduced levels to table
         if (finalBmValue != '' &&
             finalBmValue.contains(".", finalBmValue.indexOf(".") + 1) ==
@@ -527,18 +632,18 @@ class _LevellingState extends State<Levelling> {
         finalBmValue.contains(" ") == false &&
         finalBmValue.contains("-", 1) == false) {
       if (initMethod == "Rise or Fall") {
-        dataHeadings.add("RISE");
-        dataHeadings.add("FALL");
-        dataHeadings.add("IRL");
-        dataHeadings.add("ADJ");
-        dataHeadings.add("FRL");
-        dataHeadings.add("RKS");
+        dataHeadings.add("Rise");
+        dataHeadings.add("Fall");
+        dataHeadings.add("Initial Reduced Level");
+        dataHeadings.add("Adjustment");
+        dataHeadings.add("Final Reduced Level");
+        dataHeadings.add("Remarks");
       } else {
-        dataHeadings.add("HPC");
-        dataHeadings.add("IRL");
-        dataHeadings.add("ADJ");
-        dataHeadings.add("FRL");
-        dataHeadings.add("RKS");
+        dataHeadings.add("Height of plane of collimation");
+        dataHeadings.add("Initial Reduced Level");
+        dataHeadings.add("Adjustment");
+        dataHeadings.add("Final Reduced Level");
+        dataHeadings.add("Remarks");
       }
     } else {
       if (initMethod == "Rise or Fall") {
@@ -565,6 +670,10 @@ class _LevellingState extends State<Levelling> {
   String backsightDropDownValue;
   String foresightDropDownValue;
   String intersightDropDownValue;
+  String upperStadiaValue;
+  String middleStadiaValue;
+  String lowerStadiaValue;
+  String digitalReadingValue;
   @override
   void initState() {
     super.initState();
@@ -674,6 +783,9 @@ class _LevellingState extends State<Levelling> {
                               value: LevellingType.single_run,
                               onChanged: (LevellingType value) {
                                 setState(() {
+                                  //   try {
+                                  //     extractHeaders(dataFile);
+                                  //   } catch (e) {}
                                   radioValue = value;
                                 });
                               },
@@ -693,6 +805,10 @@ class _LevellingState extends State<Levelling> {
                               groupValue: radioValue,
                               onChanged: (LevellingType value) {
                                 setState(() {
+                                  // try {
+                                  //   extractHeaders(dataFile);
+                                  // } catch (e) {}
+
                                   radioValue = value;
                                 });
                               },
@@ -765,7 +881,7 @@ class _LevellingState extends State<Levelling> {
                           child: textController(
                               initialBm, 'Enter Initial BM value'),
                         ),
-                      if (dataPicked)
+                      if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
                           padding: padding,
                           child: Text(
@@ -773,13 +889,13 @@ class _LevellingState extends State<Levelling> {
                             style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
                           ),
                         ),
-                      if (dataPicked)
+                      if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
                           padding: padding,
                           child: textController(
                               finalBm, 'Leave as empty if there\'s none'),
                         ),
-                      if (dataPicked)
+                      if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
                           padding: padding,
                           child: Text(
@@ -787,7 +903,7 @@ class _LevellingState extends State<Levelling> {
                             style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
                           ),
                         ),
-                      if (dataPicked)
+                      if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
                           padding: padding,
                           child: Container(
@@ -797,7 +913,7 @@ class _LevellingState extends State<Levelling> {
                                 'Height of plane of collimation'
                               ], value: initMethod)),
                         ),
-                      if (dataPicked)
+                      if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
                           padding: padding,
                           child: Text(
@@ -805,7 +921,7 @@ class _LevellingState extends State<Levelling> {
                             style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
                           ),
                         ),
-                      if (dataPicked)
+                      if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
                           padding: padding,
                           child: Container(
@@ -831,7 +947,7 @@ class _LevellingState extends State<Levelling> {
                                   items: headers,
                                   value: backsightDropDownValue)),
                         ),
-                      if (dataPicked)
+                      if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
                           padding: padding,
                           child: Text(
@@ -839,7 +955,7 @@ class _LevellingState extends State<Levelling> {
                             style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
                           ),
                         ),
-                      if (dataPicked)
+                      if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
                           padding: padding,
                           child: Container(
@@ -865,6 +981,70 @@ class _LevellingState extends State<Levelling> {
                                   items: headers,
                                   value: foresightDropDownValue)),
                         ),
+                      if (dataPicked && radioValue == LevellingType.double_run)
+                        Padding(
+                          padding: padding,
+                          child: Text(
+                            'Upper stadia reading',
+                            style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
+                          ),
+                        ),
+                      if (dataPicked && radioValue == LevellingType.double_run)
+                        Padding(
+                          padding: padding,
+                          child: Container(
+                              width: 300,
+                              child: dropDownButton(
+                                  items: headers, value: upperStadiaValue)),
+                        ),
+                      if (dataPicked && radioValue == LevellingType.double_run)
+                        Padding(
+                          padding: padding,
+                          child: Text(
+                            'Middle stadia reading',
+                            style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
+                          ),
+                        ),
+                      if (dataPicked && radioValue == LevellingType.double_run)
+                        Padding(
+                          padding: padding,
+                          child: Container(
+                              width: 300,
+                              child: dropDownButton(
+                                  items: headers, value: middleStadiaValue)),
+                        ),
+                      if (dataPicked && radioValue == LevellingType.double_run)
+                        Padding(
+                          padding: padding,
+                          child: Text(
+                            'Lower stadia reading',
+                            style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
+                          ),
+                        ),
+                      if (dataPicked && radioValue == LevellingType.double_run)
+                        Padding(
+                          padding: padding,
+                          child: Container(
+                              width: 300,
+                              child: dropDownButton(
+                                  items: headers, value: lowerStadiaValue)),
+                        ),
+                      if (dataPicked && radioValue == LevellingType.double_run)
+                        Padding(
+                          padding: padding,
+                          child: Text(
+                            'Digital reading',
+                            style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
+                          ),
+                        ),
+                      if (dataPicked && radioValue == LevellingType.double_run)
+                        Padding(
+                          padding: padding,
+                          child: Container(
+                              width: 300,
+                              child: dropDownButton(
+                                  items: headers, value: digitalReadingValue)),
+                        ),
                       if (dataPicked)
                         Padding(
                           padding: EdgeInsets.all(20),
@@ -876,8 +1056,10 @@ class _LevellingState extends State<Levelling> {
                               ),
                             ),
                             onPressed: () {
-                              if (key.currentState.validate())
-                                levelComputation();
+                              if (key.currentState.validate()) if (radioValue ==
+                                  LevellingType.single_run) simpleComputation();
+                              if (radioValue == LevellingType.double_run)
+                                preciseComputation();
                             },
                             style: ButtonStyle(backgroundColor:
                                 MaterialStateProperty.resolveWith(
