@@ -88,36 +88,36 @@ PreferredSizeWidget myAppBar() {
         SizedBox(
             // width: 30,
             ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-          child: Container(
-            width: 300,
-            height: 150,
-            alignment: Alignment.center,
-            child: Form(
-              child: TextFormField(
-                cursorColor: Colors.black,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.teal.shade900)),
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.teal.shade800)),
-                    hintText: '  Search here',
-                    hintStyle: TextStyle(color: Colors.white),
-                    suffixIcon: Padding(
-                      padding: const EdgeInsets.only(right: 5.0),
-                      child: IconButton(
-                        icon: Icon(Icons.search),
-                        onPressed: () {},
-                        color: Colors.white,
-                        splashRadius: 20.0,
-                      ),
-                    )),
-              ),
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+        //   child: Container(
+        //     width: 300,
+        //     height: 150,
+        //     alignment: Alignment.center,
+        //     child: Form(
+        //       child: TextFormField(
+        //         cursorColor: Colors.black,
+        //         style: TextStyle(color: Colors.white),
+        //         decoration: InputDecoration(
+        //             focusedBorder: OutlineInputBorder(
+        //                 borderSide: BorderSide(color: Colors.teal.shade900)),
+        //             border: OutlineInputBorder(
+        //                 borderSide: BorderSide(color: Colors.teal.shade800)),
+        //             hintText: '  Search here',
+        //             hintStyle: TextStyle(color: Colors.white),
+        //             suffixIcon: Padding(
+        //               padding: const EdgeInsets.only(right: 5.0),
+        //               child: IconButton(
+        //                 icon: Icon(Icons.search),
+        //                 onPressed: () {},
+        //                 color: Colors.white,
+        //                 splashRadius: 20.0,
+        //               ),
+        //             )),
+        //       ),
+        //     ),
+        //   ),
+        // ),
       ],
     ),
   );
