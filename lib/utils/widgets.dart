@@ -86,39 +86,6 @@ PreferredSizeWidget myAppBar() {
           child: Text('DOCUMENTATION'),
           onPressed: () {},
         ),
-        SizedBox(
-            // width: 30,
-            ),
-        // Padding(
-        //   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-        //   child: Container(
-        //     width: 300,
-        //     height: 150,
-        //     alignment: Alignment.center,
-        //     child: Form(
-        //       child: TextFormField(
-        //         cursorColor: Colors.black,
-        //         style: TextStyle(color: Colors.white),
-        //         decoration: InputDecoration(
-        //             focusedBorder: OutlineInputBorder(
-        //                 borderSide: BorderSide(color: Colors.teal.shade900)),
-        //             border: OutlineInputBorder(
-        //                 borderSide: BorderSide(color: Colors.teal.shade800)),
-        //             hintText: '  Search here',
-        //             hintStyle: TextStyle(color: Colors.white),
-        //             suffixIcon: Padding(
-        //               padding: const EdgeInsets.only(right: 5.0),
-        //               child: IconButton(
-        //                 icon: Icon(Icons.search),
-        //                 onPressed: () {},
-        //                 color: Colors.white,
-        //                 splashRadius: 20.0,
-        //               ),
-        //             )),
-        //       ),
-        //     ),
-        //   ),
-        // ),
       ],
     ),
   );
@@ -236,4 +203,60 @@ class CustomAppBarState extends State<CustomAppBar> {
       ),
     );
   }
+}
+
+Widget textController(
+    {TextEditingController controller,
+    String hintText,
+    String Function(String) validator}) {
+  return IntrinsicWidth(
+    child: Container(
+      width: 300,
+      child: TextFormField(
+        validator: validator,
+        controller: controller,
+        decoration:
+            InputDecoration(border: OutlineInputBorder(), hintText: hintText),
+      ),
+    ),
+  );
+}
+
+Widget processButton({void Function() onPressed}) {
+  return ElevatedButton(
+    onPressed: onPressed,
+    child: Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Text('PROCESS'),
+    ),
+    style: ButtonStyle(backgroundColor:
+        MaterialStateProperty.resolveWith((Set<MaterialState> states) {
+      if (states.contains(MaterialState.hovered)) {
+        return Colors.white;
+      }
+      return Colors.teal;
+    }), textStyle:
+        MaterialStateProperty.resolveWith((Set<MaterialState> states) {
+      if (states.contains(MaterialState.hovered)) {
+        return TextStyle(
+            letterSpacing: 2.0,
+            fontFamily: 'Akaya',
+            fontSize: 22,
+            fontWeight: FontWeight.bold);
+      }
+      return TextStyle(fontFamily: 'Akaya', letterSpacing: 2.0);
+    }), foregroundColor:
+        MaterialStateProperty.resolveWith((Set<MaterialState> states) {
+      if (states.contains(MaterialState.hovered)) {
+        return Colors.teal;
+      }
+      return Colors.white;
+    }), elevation:
+        MaterialStateProperty.resolveWith((Set<MaterialState> states) {
+      if (states.contains(MaterialState.hovered)) {
+        return 12.0;
+      }
+      return 6.0;
+    })),
+  );
 }
