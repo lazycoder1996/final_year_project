@@ -1,0 +1,26 @@
+'''
+LEVELING
+refresh drop down items when radio value is changed
+if computations runs into an error due to incorrect data headers,
+return a dialog, could not process data
+add download button
+
+TRAVERSING
+Design interface 03/04/2021
+Revise computations 05/04/2021
+
+
+flow chart
+diagram describing architecture
+start with general architecture or overview
+front end in details, how it is developed, how it is designed, sample images
+back end, how server works, database and its setup
+documentation
+
+FOCUS
+develop implementation of tools
+read input => process => write output
+then build UI
+
+
+'''
