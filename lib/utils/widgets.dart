@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 PreferredSizeWidget myAppBar() {
   return AppBar(
+    automaticallyImplyLeading: false,
     title: Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
