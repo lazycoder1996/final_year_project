@@ -11,7 +11,7 @@ class Traversing extends StatefulWidget {
 class _TraversingState extends State<Traversing> {
   String _fileName = '';
   bool dataPicked = false;
-  String typeOfTraverseDropdown = 'Closed Link';
+  String typeOfTraverseDropdown = 'Closed Loop';
   String backsightDropdown;
   String foresightDropdown;
   String stationDropdown;
@@ -60,7 +60,7 @@ class _TraversingState extends State<Traversing> {
     circleReadings = [];
     distanceData = [];
 
-    for (int i = 0; i < dataSize; i++) {
+    for (int i = 1; i < dataSize; i++) {
       backsightData.add(traverseData[i][headers.indexOf(backsightDropdown)]);
       foresightData.add(traverseData[i][headers.indexOf(foresightDropdown)]);
       stationData.add(traverseData[i][headers.indexOf(stationDropdown)]);
@@ -71,12 +71,25 @@ class _TraversingState extends State<Traversing> {
     setState(() {
       changeBody = true;
     });
+    print('backskight data $backsightData');
+    print('station data is $stationData');
   }
 
   String closedLinkScenario = 'Scenario 1';
   String closedLoopScenario = 'Scenario 1';
 
   List<Widget> newBody(EdgeInsetsGeometry padding) {
+    TextEditingController northingsOfOne = TextEditingController();
+    TextEditingController northingsOfTwo = TextEditingController();
+    TextEditingController eastingsOfOne = TextEditingController();
+    TextEditingController eastingsOfTwo = TextEditingController();
+    Map<String, TextEditingController> textControllers = {
+      'Northings of ${backsightData[0]}': northingsOfOne,
+      'Eastings of ${backsightData[0]}': eastingsOfOne,
+      'Northings of ${stationData[0]}': northingsOfTwo,
+      'Eastings of ${stationData[0]}': eastingsOfTwo
+    };
+
     List<Widget> children = [
       Padding(
         padding: padding,
@@ -132,7 +145,7 @@ class _TraversingState extends State<Traversing> {
         padding: padding,
         child: Container(
           child: closedLinkScenario == 'Scenario 1'
-              ? Image.asset('images/LinkSenarioOne.png')
+              ? Image.asset('images/LinkScenarioOne.png')
               : Image.asset('images/theo.jpeg'),
         ),
       ));
@@ -154,11 +167,25 @@ class _TraversingState extends State<Traversing> {
       children.add(Padding(
         padding: padding,
         child: Container(
-          child: closedLinkScenario == 'Scenario 1'
+          child: closedLoopScenario == 'Scenario 1'
               ? Image.asset('images/LoopScenarioOne.png')
               : Image.asset('images/LoopScenarioTwo.png'),
         ),
       ));
+      if (closedLoopScenario == 'Scenario 1')
+        for (var i in textControllers.keys) {
+          children.add(Padding(
+            padding: padding,
+            child: textController(
+              controller: textControllers[i],
+              hintText: 'Enter $i',
+            ),
+          ));
+        }
+      if (closedLoopScenario == 'Scenario 2') {}
+
+      children.add(Padding(
+          padding: EdgeInsets.all(20), child: processButton(onPressed: () {})));
     }
 
     return children;
