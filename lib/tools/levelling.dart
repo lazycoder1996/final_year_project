@@ -682,24 +682,6 @@ class LevellingState extends State<Levelling> {
   TextEditingController initialBm = TextEditingController();
   TextEditingController finalBm = TextEditingController();
   GlobalKey<FormState> key = GlobalKey<FormState>();
-  Widget textController(TextEditingController controller, String hintText) {
-    return IntrinsicWidth(
-      child: Container(
-        width: 300,
-        child: TextFormField(
-          validator: controller == initialBm
-              ? (string) {
-                  if (string.isEmpty) return 'Required';
-                  return null;
-                }
-              : null,
-          controller: controller,
-          decoration:
-              InputDecoration(border: OutlineInputBorder(), hintText: hintText),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -849,7 +831,12 @@ class LevellingState extends State<Levelling> {
                         Padding(
                           padding: padding,
                           child: textController(
-                              initialBm, 'Enter Initial BM value'),
+                              controller: initialBm,
+                              validator: (string) {
+                                if (string.isEmpty) return 'Required';
+                                return null;
+                              },
+                              hintText: 'Enter Initial BM value'),
                         ),
                       if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
@@ -863,7 +850,8 @@ class LevellingState extends State<Levelling> {
                         Padding(
                           padding: padding,
                           child: textController(
-                              finalBm, 'Leave as empty if there\'s none'),
+                              controller: finalBm,
+                              hintText: 'Leave as empty if there\'s none'),
                         ),
                       if (dataPicked && radioValue == LevellingType.single_run)
                         Padding(
@@ -1018,52 +1006,7 @@ class LevellingState extends State<Levelling> {
                       if (dataPicked)
                         Padding(
                           padding: EdgeInsets.all(20),
-                          child: ElevatedButton(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: Text(
-                                'PROCESS',
-                              ),
-                            ),
-                            onPressed: () {
-                              if (key.currentState.validate()) if (radioValue ==
-                                  LevellingType.single_run) simpleComputation();
-                              if (radioValue == LevellingType.double_run)
-                                preciseComputation();
-                            },
-                            style: ButtonStyle(backgroundColor:
-                                MaterialStateProperty.resolveWith(
-                                    (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.hovered)) {
-                                return Colors.white;
-                              }
-                              return Colors.teal;
-                            }), textStyle: MaterialStateProperty.resolveWith(
-                                (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.hovered)) {
-                                return TextStyle(
-                                    letterSpacing: 2.0,
-                                    fontFamily: 'Akaya',
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold);
-                              }
-                              return TextStyle(
-                                  fontFamily: 'Akaya', letterSpacing: 2.0);
-                            }), foregroundColor:
-                                MaterialStateProperty.resolveWith(
-                                    (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.hovered)) {
-                                return Colors.teal;
-                              }
-                              return Colors.white;
-                            }), elevation: MaterialStateProperty.resolveWith(
-                                (Set<MaterialState> states) {
-                              if (states.contains(MaterialState.hovered)) {
-                                return 12.0;
-                              }
-                              return 6.0;
-                            })),
-                          ),
+                          child: processButton(),
                         ),
                     ],
                   ),
