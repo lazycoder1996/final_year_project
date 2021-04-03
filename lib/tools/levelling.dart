@@ -1,34 +1,21 @@
 import 'dart:async';
+import 'package:final_project/functions.dart';
 import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:grizzly_io/io_loader.dart';
 import 'package:file_access/file_access.dart';
-import 'package:csv/csv.dart' as csv;
 import 'dart:math' as math;
 
 class Levelling extends StatefulWidget {
   @override
-  _LevellingState createState() => _LevellingState();
+  LevellingState createState() => LevellingState();
 }
 
 enum LevellingType { single_run, double_run }
 
-class _LevellingState extends State<Levelling> {
+class LevellingState extends State<Levelling> {
   TextOverflow textOverflow = TextOverflow.ellipsis;
   bool dataPicked = false;
-  static List<List> csvToList(String myCsvFile) {
-    csv.CsvToListConverter c = new csv.CsvToListConverter(
-      eol: "\r\n",
-      fieldDelimiter: ",",
-    );
-    List<List> listCreated = c.convert(myCsvFile);
-    return listCreated;
-  }
-
-  Future<List<List<String>>> readData(String fileName) async {
-    final csv = await readCsv(fileName);
-    return csv;
-  }
 
   String _fileName;
 
@@ -68,24 +55,7 @@ class _LevellingState extends State<Levelling> {
         extractHeaders(file);
       }, onError: (error) {
         print(error.toString());
-        showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                title: Text('An error occurred'),
-                content: Text(
-                    'The selected file is not a csv type. Please try again'),
-                actions: [
-                  TextButton(
-                    child: Text('Return'),
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                    },
-                  ),
-                ],
-              );
-            });
+        errorAlert(context);
       });
     } else {
       print('user cancelled operation');
