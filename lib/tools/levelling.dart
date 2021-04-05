@@ -1005,9 +1005,16 @@ class LevellingState extends State<Levelling> {
                         ),
                       if (dataPicked)
                         Padding(
-                          padding: EdgeInsets.all(20),
-                          child: processButton(),
-                        ),
+                            padding: EdgeInsets.all(20),
+                            child: processButton(
+                              onPressed: () {
+                                if (key.currentState.validate()) if (radioValue ==
+                                    LevellingType.single_run)
+                                  simpleComputation();
+                                if (radioValue == LevellingType.double_run)
+                                  preciseComputation();
+                              },
+                            )),
                     ],
                   ),
                 ),
@@ -1055,8 +1062,4 @@ class LevellingState extends State<Levelling> {
       ),
     );
   }
-
-  TextStyle headerStyle =
-      TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Akaya');
-  TextStyle rowStyle = TextStyle(fontFamily: 'Maths', fontSize: 18);
 }
