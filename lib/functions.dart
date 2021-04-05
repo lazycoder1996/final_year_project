@@ -83,3 +83,13 @@ void errorAlert(BuildContext context) {
         );
       });
 }
+
+String decimalPlaces(dynamic value) {
+  return value != ""
+      ? double.tryParse(value.toString()).toStringAsFixed(4)
+      : "";
+}
+
+TextStyle headerStyle =
+    TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Akaya');
+TextStyle rowStyle = TextStyle(fontFamily: 'Maths', fontSize: 18);
