@@ -15,7 +15,10 @@ class _CurveRangingState extends State<CurveRanging> {
   String circularCurveValue = 'Scenario 1';
   String verticalCurveValue = 'Scenario 1';
   Widget newPage;
-  Map<String, dynamic> computationalInputs = {'direction': direction};
+  Map<String, dynamic> horizontalCurveComputationInputs = {
+    'direction': direction
+  };
+  Map<String, dynamic> verticalCurveComputationInputs = {};
   TextEditingController radius = new TextEditingController();
   TextEditingController chainagePI = new TextEditingController();
   TextEditingController pegInterval = new TextEditingController();
@@ -80,12 +83,12 @@ class _CurveRangingState extends State<CurveRanging> {
           textInputAction: TextInputAction.done,
           onFieldSubmitted: (value) {
             setState(() {
-              computationalInputs[label] = controller;
+              horizontalCurveComputationInputs[label] = controller;
             });
           },
           onChanged: (value) {
             setState(() {
-              computationalInputs[label] = controller;
+              horizontalCurveComputationInputs[label] = controller;
             });
           },
           decoration:
@@ -146,7 +149,8 @@ class _CurveRangingState extends State<CurveRanging> {
                     value: direction,
                     onChanged: (newValue) {
                       setState(() {
-                        computationalInputs['direction'] = newValue;
+                        horizontalCurveComputationInputs['direction'] =
+                            newValue;
                       });
                     }),
               ),
@@ -200,10 +204,13 @@ class _CurveRangingState extends State<CurveRanging> {
                 );
               });
           setState(() {
-            result = computeParameters(
-                typeOfCurve: typeOfCurveValue,
-                scenario: scenario,
-                computationalValues: computationalInputs);
+            result = typeOfCurveValue == 'Circular Curve'
+                ? computeHorizontalCurveParameters(
+                    scenario: scenario,
+                    computationalValues: horizontalCurveComputationInputs)
+                : computeVerticalCurveParameters(
+                    scenario: scenario,
+                    computationalValues: verticalCurveComputationInputs);
           });
           Navigator.of(context).pop();
           setState(() {
