@@ -1,6 +1,5 @@
 import 'package:final_project/computations/traversing.dart';
 import 'package:final_project/functions.dart';
-import 'package:final_project/tools/levelling.dart';
 import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -434,8 +433,7 @@ class _TraversingState extends State<Traversing> {
                                 padding: padding,
                                 child: Text(
                                   'Type of Traverse',
-                                  style: TextStyle(
-                                      fontSize: 22, fontFamily: 'Akaya'),
+                                  style: inputStyle,
                                 ),
                               ),
                             if (dataPicked)
