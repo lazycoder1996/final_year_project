@@ -93,3 +93,91 @@ String decimalPlaces(dynamic value) {
 TextStyle headerStyle =
     TextStyle(fontSize: 20, fontWeight: FontWeight.bold, fontFamily: 'Akaya');
 TextStyle rowStyle = TextStyle(fontFamily: 'Maths', fontSize: 18);
+
+TextStyle titleStyle = TextStyle(
+    color: Colors.black,
+    fontWeight: FontWeight.bold,
+    fontSize: 32,
+    fontFamily: 'Akaya');
+TextStyle configurationStyle = TextStyle(fontSize: 18, fontFamily: 'Berkshire');
+TextStyle inputStyle = TextStyle(fontSize: 22, fontFamily: 'Akaya');
+Widget dropDownButton(
+    {List<String> items,
+    InputDecoration decoration,
+    String value,
+    void Function(String) onChanged}) {
+  return DropdownButtonFormField(
+    decoration: decoration ?? InputDecoration(border: OutlineInputBorder()),
+    items: items
+        .map((e) => DropdownMenuItem(
+              child: Text(e.toString()),
+              value: e,
+            ))
+        .toList(),
+    value: value,
+    onChanged: onChanged,
+  );
+}
+
+String degreesToDms(num myNumber) {
+  String sign;
+  num a = myNumber.abs();
+  int degrees = a.truncate();
+  num b = (a - degrees) * 60;
+  int minutes = b.truncate();
+  num c = b - minutes;
+  num seconds = num.parse((c * 60).toStringAsFixed(4));
+  if (seconds >= 60) {
+    minutes++;
+    seconds = 60 - seconds;
+  }
+  if (minutes >= 60) {
+    degrees++;
+    minutes = 60 - minutes;
+  }
+  if (myNumber.isNegative == true) {
+    sign = "-";
+  } else {
+    sign = "";
+  }
+  String degreesStandard = degrees.toString();
+  String minutesStandard = minutes.toString();
+  String sec = seconds.toString();
+  String endSec = sec.substring(sec.indexOf(".") + 1);
+  String secondsStandard = sec.substring(0, sec.indexOf("."));
+  if (degreesStandard.length == 1) {
+    degreesStandard = "00" + degreesStandard;
+  } else if (degreesStandard.length == 2) {
+    degreesStandard = "0" + degreesStandard;
+  } else {
+    degreesStandard = degreesStandard;
+  }
+  if (minutesStandard.length == 1) {
+    minutesStandard = "0" + minutesStandard;
+  } else {
+    minutesStandard = minutesStandard;
+  }
+  if (secondsStandard.length == 1) {
+    secondsStandard = "0" + secondsStandard;
+  } else {
+    secondsStandard = secondsStandard;
+  }
+  if (endSec.length == 1) {
+    endSec = endSec + "000";
+  } else if (endSec.length == 2) {
+    endSec = endSec + "00";
+  } else if (endSec.length == 3) {
+    endSec = endSec + "0";
+  } else {
+    endSec = endSec;
+  }
+  return sign +
+      degreesStandard +
+      "°" +
+      minutesStandard +
+      "'" +
+      secondsStandard +
+      "." +
+      endSec +
+      "\"";
+}
