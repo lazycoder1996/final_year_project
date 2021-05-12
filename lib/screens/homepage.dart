@@ -45,6 +45,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    print('height ${size.height}: width ${size.width}');
     return Scaffold(
       appBar: myAppBar(),
       body: Scrollbar(
