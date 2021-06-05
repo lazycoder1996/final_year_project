@@ -1,4 +1,3 @@
-import 'package:final_project/tools/curveRanging.dart';
 import 'package:final_project/tools/levelling.dart';
 import 'package:final_project/tools/traversing.dart';
 import 'package:final_project/utils/widgets.dart';
@@ -49,166 +48,164 @@ class _HomePageState extends State<HomePage> {
     print('height ${size.height}: width ${size.width}');
     return Scaffold(
       appBar: myAppBar(),
-      body: Scrollbar(
-        isAlwaysShown: true,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 400,
-                child: Carousel(
-                    dotSize: 5.0,
-                    indicatorBgPadding: 5,
-                    dotBgColor: Colors.teal,
-                    showIndicator: true,
-                    autoplayDuration: Duration(seconds: 4),
-                    animationDuration: Duration(milliseconds: 400),
-                    animationCurve: Curves.easeInQuint,
-                    images: [
-                      Image.asset(
-                        'images/theo.jpeg',
-                      ),
-                      Image.asset(
-                        'images/survey_with_theo.jpg',
-                        fit: BoxFit.fill,
-                      ),
-                      Image.asset('images/sekina.jpeg'),
-                      Image.asset('images/field_work.jpg'),
-                    ]),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10.0),
-                child: Center(
-                  child: Text(
-                    'Hello There!',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 34,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Redressed'),
+      body: SafeArea(
+        child: Scrollbar(
+          isAlwaysShown: true,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 400,
+                  child: Carousel(
+                      dotSize: 5.0,
+                      indicatorBgPadding: 5,
+                      dotBgColor: Colors.teal,
+                      showIndicator: true,
+                      autoplayDuration: Duration(seconds: 4),
+                      animationDuration: Duration(milliseconds: 400),
+                      animationCurve: Curves.easeInQuint,
+                      images: [
+                        Image.asset(
+                          'images/theo.jpeg',
+                        ),
+                        Image.asset(
+                          'images/survey_with_theo.jpg',
+                          fit: BoxFit.fill,
+                        ),
+                        Image.asset('images/sekina.jpeg'),
+                        Image.asset('images/field_work.jpg'),
+                      ]),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Center(
+                    child: Text(
+                      'Hello There!',
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 34,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Redressed'),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Center(
-                  child: Text('You are few clicks away from enjoying...',
-                      style: TextStyle(
-                          fontSize: 26,
-                          color: Colors.black87,
-                          fontFamily: 'Redressed'))),
-              SizedBox(
-                height: 15,
-                width: 300,
-                child: Divider(
-                  color: Colors.teal[100],
+                SizedBox(
+                  height: 5,
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                      child: itemCard(
+                Center(
+                    child: Text('You are few clicks away from enjoying...',
+                        style: TextStyle(
+                            fontSize: 26,
+                            color: Colors.black87,
+                            fontFamily: 'Redressed'))),
+                Center(
+                  child: SizedBox(
+                    height: 15,
+                    width: 300,
+                    child: Divider(
+                      color: Colors.teal[100],
+                    ),
+                  ),
+                ),
+                Center(
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    children: [
+                      itemCard(
                           title: 'Levelling',
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => Levelling()));
-                          })),
-                  Expanded(
-                      child: itemCard(
+                          }),
+                      itemCard(
                           title: 'Traversing',
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => Traversing()));
-                          })),
-                  Expanded(
-                      child: itemCard(
-                          title: 'Curve Ranging',
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => CurveRanging()));
-                          }))
-                ],
-              ),
-              SizedBox(
-                height: 100,
-              ),
-              Container(
-                decoration: BoxDecoration(
-                    color: Colors.grey[400],
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        topRight: Radius.circular(10))),
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: SelectableText(
-                          'CONTACT',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 26,
-                              fontFamily: 'Akaya'),
+                          }),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 100,
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.grey[400],
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10))),
+                  width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5.0),
+                          child: SelectableText(
+                            'CONTACT',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 26,
+                                fontFamily: 'Akaya'),
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      SelectableText(
-                          'Kwame Nkrumah University of Science and Technology',
-                          toolbarOptions:
-                              ToolbarOptions(copy: true, selectAll: true),
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontFamily: 'Caveat',
-                              color: Colors.black)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SelectableText('Department of Geomatic Engineering',
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontFamily: 'Caveat',
-                              color: Colors.black)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      SelectableText('Kumasi - Ghana',
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontFamily: 'Caveat',
-                              color: Colors.black)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      InkWell(
-                        onTap: () {},
-                        hoverColor: Colors.white,
-                        child: Text('geomaticeng@knust.edu.gh',
+                        SizedBox(
+                          height: 20,
+                        ),
+                        SelectableText(
+                            'Kwame Nkrumah University of Science and Technology',
+                            toolbarOptions:
+                                ToolbarOptions(copy: true, selectAll: true),
                             style: TextStyle(
                                 fontSize: 22,
                                 fontFamily: 'Caveat',
                                 color: Colors.black)),
-                      )
-                    ],
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SelectableText('Department of Geomatic Engineering',
+                            style: TextStyle(
+                                fontSize: 22,
+                                fontFamily: 'Caveat',
+                                color: Colors.black)),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        SelectableText('Kumasi - Ghana',
+                            style: TextStyle(
+                                fontSize: 22,
+                                fontFamily: 'Caveat',
+                                color: Colors.black)),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        InkWell(
+                          onTap: () {},
+                          hoverColor: Colors.white,
+                          child: Text('geomaticeng@knust.edu.gh',
+                              style: TextStyle(
+                                  fontSize: 22,
+                                  fontFamily: 'Caveat',
+                                  color: Colors.black)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              // Expanded(
-              //   flex: 0,
-              //   child: GridView.builder(
-              //       itemCount: 3,
-              //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //           crossAxisCount: 3),
-              //       itemBuilder: (context, index) {
-              //         return itemCard(title: 'Levelling');
-              //       }),
-              // )
-            ],
+                // Expanded(
+                //   flex: 0,
+                //   child: GridView.builder(
+                //       itemCount: 3,
+                //       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                //           crossAxisCount: 3),
+                //       itemBuilder: (context, index) {
+                //         return itemCard(title: 'Levelling');
+                //       }),
+                // )
+              ],
+            ),
           ),
         ),
       ),
@@ -219,7 +216,8 @@ class _HomePageState extends State<HomePage> {
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Container(
-        height: 250,
+        height: 200,
+        width: 300,
         child: ElevatedButton(
           onPressed: () {
             onPressed();
