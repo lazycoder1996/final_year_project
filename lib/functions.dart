@@ -63,18 +63,23 @@ List<dynamic> extractHeaders(List<List<dynamic>> csvData) {
   return csvData[0].map((e) => e.toString()).toList();
 }
 
-void errorAlert(BuildContext context) {
+void errorAlert({
+  BuildContext context,
+  String content,
+}) {
   showDialog(
       barrierDismissible: false,
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text('An error occurred'),
-          content:
-              Text('The selected file is not a csv type. Please try again'),
+          content: Text(content),
           actions: [
             TextButton(
-              child: Text('Return'),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text('Return'),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(true);
               },
@@ -180,4 +185,24 @@ String degreesToDms(num myNumber) {
       "." +
       endSec +
       "\"";
+}
+
+// bool checkScreen(BuildContext context) {}
+String standardDistance(num distance, int numberOfDecimals) {
+  String dString = distance.toStringAsFixed(numberOfDecimals);
+  num pointIndex = dString.indexOf(".");
+  String decimals = dString.substring(pointIndex + 1);
+  num length = decimals.length;
+  num difference = numberOfDecimals - length;
+  if (difference != 0 && difference > 0) {
+    while (difference < numberOfDecimals) {
+      decimals += "0";
+      difference = numberOfDecimals - decimals.length;
+      if (difference == 0) {
+        break;
+      }
+    }
+  }
+  String answer = dString.substring(0, pointIndex + 1) + decimals;
+  return answer;
 }
