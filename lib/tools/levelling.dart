@@ -18,26 +18,35 @@ class LevellingState extends State<Levelling> {
   String _fileName;
 
   void extractHeaders(String file) {
-    setState(() {
-      dataPicked = true;
-      levelData = [];
-      levelData = csvToList(file);
-      headers = levelData[0].map((e) {
-        return e.toString();
-      }).toList();
-      backsightDropDownValue = headers[0].toString();
+    try {
+      setState(() {
+        levelData = [];
+        headers = [];
+        levelData = csvToList(file);
+        headers = levelData[0].map((e) {
+          return e.toString();
+        }).toList();
+        backsightDropDownValue = headers[0].toString();
 
-      if (radioValue == LevellingType.single_run) {
-        intersightDropDownValue = headers[1].toString();
-        foresightDropDownValue = headers[2].toString();
-      } else {
-        foresightDropDownValue = headers[1].toString();
-        upperStadiaValue = headers[2].toString();
-        middleStadiaValue = headers[3].toString();
-        lowerStadiaValue = headers[4].toString();
-        digitalReadingValue = headers[5].toString();
-      }
-    });
+        if (radioValue == LevellingType.single_run) {
+          intersightDropDownValue = headers[1].toString();
+          foresightDropDownValue = headers[2].toString();
+        } else {
+          foresightDropDownValue = headers[1].toString();
+          upperStadiaValue = headers[2].toString();
+          middleStadiaValue = headers[3].toString();
+          lowerStadiaValue = headers[4].toString() ?? 'Lower stadia value';
+          digitalReadingValue =
+              headers[5].toString() ?? 'Digital reading value';
+        }
+        dataPicked = true;
+      });
+    } catch (e) {
+      errorAlert(
+          context: context,
+          content:
+              'Error extracting data. Please refer to documentation and try again');
+    }
   }
 
   String dataFile;
@@ -53,7 +62,9 @@ class LevellingState extends State<Levelling> {
         extractHeaders(file);
       }, onError: (error) {
         print(error.toString());
-        errorAlert(context);
+        errorAlert(
+            context: context,
+            content: 'The selected file is not a csv type. Please try again');
       });
     } else {
       print('user cancelled operation');
@@ -733,9 +744,7 @@ class LevellingState extends State<Levelling> {
                               value: LevellingType.single_run,
                               onChanged: (LevellingType value) {
                                 setState(() {
-                                  //   try {
-                                  //     extractHeaders(dataFile);
-                                  //   } catch (e) {}
+                                  dataPicked = false;
                                   radioValue = value;
                                 });
                               },
@@ -755,10 +764,7 @@ class LevellingState extends State<Levelling> {
                               groupValue: radioValue,
                               onChanged: (LevellingType value) {
                                 setState(() {
-                                  // try {
-                                  //   extractHeaders(dataFile);
-                                  // } catch (e) {}
-
+                                  dataPicked = false;
                                   radioValue = value;
                                 });
                               },
@@ -815,48 +821,6 @@ class LevellingState extends State<Levelling> {
                             'Configuration',
                             style: TextStyle(
                                 fontSize: 18, fontFamily: 'Berkshire'),
-                          ),
-                        ),
-                      if (dataPicked)
-                        Padding(
-                          padding: padding,
-                          child: Text(
-                            'Initial BM Value',
-                            style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
-                          ),
-                        ),
-                      if (dataPicked)
-                        Padding(
-                          padding: padding,
-                          child: textController(
-                              controller: initialBm,
-                              validator: (string) {
-                                if (string.isEmpty) return 'Required';
-                                return null;
-                              },
-                              hintText: 'Enter Initial BM value'),
-                        ),
-                      if (dataPicked && radioValue == LevellingType.single_run)
-                        Padding(
-                          padding: padding,
-                          child: Text(
-                            'Final BM Value',
-                            style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
-                          ),
-                        ),
-                      if (dataPicked && radioValue == LevellingType.single_run)
-                        Padding(
-                          padding: padding,
-                          child: textController(
-                              controller: finalBm,
-                              hintText: 'Leave as empty if there\'s none'),
-                        ),
-                      if (dataPicked && radioValue == LevellingType.single_run)
-                        Padding(
-                          padding: padding,
-                          child: Text(
-                            'Method of computation',
-                            style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
                           ),
                         ),
                       if (dataPicked && radioValue == LevellingType.single_run)
