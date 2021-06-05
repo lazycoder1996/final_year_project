@@ -409,7 +409,10 @@ class _TraversingState extends State<Traversing> {
                                         });
                                       }, onError: (error) {
                                         print(error.toString());
-                                        errorAlert(context);
+                                        errorAlert(
+                                            context: context,
+                                            content:
+                                                'The selected file is not a csv type. Please try again');
                                       });
                                     },
                                   ),
