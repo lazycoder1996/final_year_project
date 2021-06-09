@@ -66,15 +66,15 @@ class _HomePageState extends State<HomePage> {
                       animationDuration: Duration(milliseconds: 400),
                       animationCurve: Curves.easeInQuint,
                       images: [
-                        Image.asset(
-                          'images/theo.jpeg',
-                        ),
-                        Image.asset(
-                          'images/survey_with_theo.jpg',
-                          fit: BoxFit.fill,
-                        ),
-                        Image.asset('images/sekina.jpeg'),
-                        Image.asset('images/field_work.jpg'),
+                        // Image.asset(
+                        //   'images/theo.jpeg',
+                        // ),
+                        // Image.asset(
+                        //   'images/survey_with_theo.jpg',
+                        //   fit: BoxFit.fill,
+                        // ),
+                        // Image.asset('images/sekina.jpeg'),
+                        // Image.asset('images/field_work.jpg'),
                       ]),
                 ),
                 Padding(
