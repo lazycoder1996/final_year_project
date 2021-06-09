@@ -1,0 +1,15 @@
+version: '3.1'
+
+services: 
+    image: postgres
+    restart: always
+    db:
+        environment: 
+            POSTGRES_PASSWORD: justtheoldpassword
+        ports:
+            - 5435:5432
+    adminer:
+        image: adminer
+        restart: always
+        ports: 
+            - 8082:8080            
