@@ -18,15 +18,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) => MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          appBarTheme: AppBarTheme(
-              iconTheme: IconThemeData(
-                color: Colors.white,
-              ),
-              elevation: 0.0),
-          primarySwatch: Colors.teal),
-      home: HomePage(),
-      title: "Geomatic ",
-    );
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+            appBarTheme: AppBarTheme(
+                iconTheme: IconThemeData(
+                  color: Colors.white,
+                ),
+                elevation: 0.0),
+            primarySwatch: Colors.teal),
+        home: HomePage(),
+        title: "Geomatic ",
+      );
 }
