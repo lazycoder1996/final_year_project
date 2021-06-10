@@ -27,10 +27,10 @@ class LevellingState extends State<Levelling> {
           return e.toString();
         }).toList();
         backsightDropDownValue = headers[0].toString();
-
         if (radioValue == LevellingType.single_run) {
           intersightDropDownValue = headers[1].toString();
           foresightDropDownValue = headers[2].toString();
+          benchmarkValue = headers[4].toString();
         } else {
           foresightDropDownValue = headers[1].toString();
           upperStadiaValue = headers[2].toString();
@@ -38,6 +38,7 @@ class LevellingState extends State<Levelling> {
           lowerStadiaValue = headers[4].toString() ?? 'Lower stadia value';
           digitalReadingValue =
               headers[5].toString() ?? 'Digital reading value';
+          benchmarkValue = headers[6].toString();
         }
         dataPicked = true;
       });
@@ -84,7 +85,7 @@ class LevellingState extends State<Levelling> {
     int middleReading = headers.indexOf(middleStadiaValue);
     int lowerReading = headers.indexOf(lowerStadiaValue);
     int digitalReading = headers.indexOf(digitalReadingValue);
-
+    int controls = headers.indexOf(benchmarkValue);
     // Computing X
     levelData[0].insert(5, 'X');
     for (var i in levelData.sublist(1)) {
@@ -118,7 +119,7 @@ class LevellingState extends State<Levelling> {
     } catch (d) {}
 
     double reducedLevel;
-    levelData[1].add(double.parse(initialBm.text.trim()));
+    levelData[1].add(double.parse(levelData[1][controls]));
     levelData[0].add('Reduced Level');
     try {
       for (int a = 2; a <= levelData.length; a = a + 2) {
@@ -146,6 +147,7 @@ class LevellingState extends State<Levelling> {
     extractHeaders(dataFile);
     // defining variables
     List backSight = [];
+    List controls = [];
     List interSight = [];
     List foreSight = [];
     List remarks = [];
@@ -189,18 +191,20 @@ class LevellingState extends State<Levelling> {
     num b;
     int timesDownloaded = 0;
     List fileNames = [];
-    String initialBmValue = initialBm.text.trim();
-    String finalBmValue = finalBm.text.trim();
-
+    dynamic initialBmValue;
+    dynamic finalBmValue;
     // putting appropriate data in columns
     for (int i = 1; i < levelData.length; i++) {
       backSight.add(levelData[i][headers.indexOf(backsightDropDownValue)]);
       interSight.add(levelData[i][headers.indexOf(intersightDropDownValue)]);
       foreSight.add(levelData[i][headers.indexOf(foresightDropDownValue)]);
+      controls.add(levelData[i][headers.indexOf(benchmarkValue)]);
     }
     // getting initial bench mark
     try {
-      initialReducedLevels.add(num.parse(initialBmValue));
+      print(controls.first);
+      initialBmValue = controls.first;
+      initialReducedLevels.add(num.parse(initialBmValue.toString()));
     } catch (e) {
       initialBmValue = '';
     }
@@ -248,15 +252,17 @@ class LevellingState extends State<Levelling> {
       } catch (e) {
         // print(e.toString());
       }
-      // print(initialReducedLevels);
+      print(initialReducedLevels);
     } else {
       selectedComputation = 'Height of plane of collimation';
 
       // Calculating for hpc
       try {
         num hpc;
-        heightCollimation = [backSight[0] + double.parse(initialBmValue)];
-        initialReducedLevels = [double.parse(initialBmValue)];
+        heightCollimation = [
+          backSight[0] + double.parse(initialBmValue.toString())
+        ];
+        initialReducedLevels = [double.parse(initialBmValue.toString())];
         n = 0;
         while (n <= size) {
           if (interSight[n + 1] != '') {
@@ -301,17 +307,14 @@ class LevellingState extends State<Levelling> {
       }
     } catch (e) {}
     // calculating errors
-    if (finalBmValue != '' &&
-        finalBmValue.contains(".", finalBmValue.indexOf(".") + 1) == false &&
-        finalBmValue.contains(" ") == false &&
-        finalBmValue.contains("-", 1) == false) {
+    if (num.tryParse(controls.last.toString()) != null) {
       // nonZeroBs = 0;
       try {
         n = 0;
-        error = double.parse(
-            ((initialReducedLevels.last) - (num.parse(finalBmValue)))
-                .toStringAsFixed(3));
-
+        error = double.parse(((initialReducedLevels.last) -
+                (num.parse(controls.last.toString())))
+            .toStringAsFixed(3));
+        print('error is $error');
         // Counting non-null values in backsight
       } catch (e) {}
 
@@ -349,10 +352,7 @@ class LevellingState extends State<Levelling> {
     }
 
     // // Calculating for final reduced levels if final Bm value is not null
-    if (finalBmValue != '' &&
-        finalBmValue.contains(".", finalBmValue.indexOf(".") + 1) == false &&
-        finalBmValue.contains(" ") == false &&
-        finalBmValue.contains("-", 1) == false) {
+    if (num.tryParse(controls.last.toString()) != null) {
       num frl;
       n = 0;
       try {
@@ -438,11 +438,7 @@ class LevellingState extends State<Levelling> {
         k = int.parse(initAccuracy);
         allowableMisclose =
             double.parse((k * math.sqrt(nonZeroBs)).toStringAsFixed(3));
-        if (finalBmValue != '' &&
-            finalBmValue.contains(".", finalBmValue.indexOf(".") + 1) ==
-                false &&
-            finalBmValue.contains(" ") == false &&
-            finalBmValue.contains("-", 1) == false) {
+        if (num.tryParse(controls.last.toString()) != null) {
           if (error.abs() <= allowableMisclose) {
             condition = '';
             misclose = 'accepted';
@@ -516,11 +512,7 @@ class LevellingState extends State<Levelling> {
       n = 0;
       while (n < size) {
         // Adding adjustment and final reduced levels to table
-        if (finalBmValue != '' &&
-            finalBmValue.contains(".", finalBmValue.indexOf(".") + 1) ==
-                false &&
-            finalBmValue.contains(" ") == false &&
-            finalBmValue.contains("-", 1) == false) {
+        if (num.tryParse(controls.last.toString()) != null) {
           // Adding rise and fall columns to table
           if (initMethod == "Rise or Fall") {
             levelData[n + 1].insert(m + 1, rise[n]);
@@ -576,10 +568,7 @@ class LevellingState extends State<Levelling> {
       errorData[n + 3].add(' ' + sumOfHeights.toStringAsFixed(3));
       errorData.add([' Arithmetic check']);
       errorData[n + 4].add(' $arithmeticCheck');
-      if (finalBmValue != '' &&
-          finalBmValue.contains(".", finalBmValue.indexOf(".") + 1) == false &&
-          finalBmValue.contains(" ") == false &&
-          finalBmValue.contains("-", 1) == false) {
+      if (num.tryParse(controls.last.toString()) != null) {
         errorData.add([' The allowable misclose']);
         errorData[n + 5].add(' $allowableMisclose');
         errorData.add([' The misclose calculated']);
@@ -590,10 +579,7 @@ class LevellingState extends State<Levelling> {
     else {
       errorData.add([' Arithmetic check']);
       errorData[n + 1].add(' $arithmeticCheck');
-      if (finalBmValue != '' &&
-          finalBmValue.contains(".", finalBmValue.indexOf(".") + 1) == false &&
-          finalBmValue.contains(" ") == false &&
-          finalBmValue.contains("-", 1) == false) {
+      if (num.tryParse(controls.last.toString()) != null) {
         errorData.add([' The allowable misclose']);
         errorData[n + 2].add(' $allowableMisclose');
         errorData.add([' The misclose calculated']);
@@ -606,10 +592,7 @@ class LevellingState extends State<Levelling> {
     dataHeadings.add("Intersight");
     dataHeadings.add("Foresight");
 
-    if (finalBmValue != '' &&
-        finalBmValue.contains(".", finalBmValue.indexOf(".") + 1) == false &&
-        finalBmValue.contains(" ") == false &&
-        finalBmValue.contains("-", 1) == false) {
+    if (num.tryParse(controls.last.toString()) != null) {
       if (initMethod == "Rise or Fall") {
         dataHeadings.add("Rise");
         dataHeadings.add("Fall");
@@ -639,8 +622,9 @@ class LevellingState extends State<Levelling> {
     setState(() {
       computationsDone = true;
     });
-    // print('data heading is $dataHeadings');
+    print('data heading is $dataHeadings');
     levelData[0] = dataHeadings;
+    dataHeadings.add('Controls');
     print('final data is $levelData');
   }
 
@@ -648,6 +632,7 @@ class LevellingState extends State<Levelling> {
 
   String backsightDropDownValue;
   String foresightDropDownValue;
+  String benchmarkValue;
   String intersightDropDownValue;
   String upperStadiaValue;
   String middleStadiaValue;
@@ -666,6 +651,7 @@ class LevellingState extends State<Levelling> {
       onChanged: (newValue) {
         setState(() {
           if (value == initMethod) initMethod = newValue;
+          if (value == benchmarkValue) benchmarkValue = newValue.toString();
           if (value == backsightDropDownValue)
             backsightDropDownValue = newValue.toString();
           if (value == foresightDropDownValue)
@@ -688,8 +674,6 @@ class LevellingState extends State<Levelling> {
 
   ScrollController firstController = ScrollController();
   ScrollController secondController = ScrollController();
-  TextEditingController initialBm = TextEditingController();
-  TextEditingController finalBm = TextEditingController();
   GlobalKey<FormState> key = GlobalKey<FormState>();
 
   @override
@@ -849,6 +833,22 @@ class LevellingState extends State<Levelling> {
                               child: dropDownButton(
                                   items: ['2', '3', '5', '7'],
                                   value: initAccuracy)),
+                        ),
+                      if (dataPicked)
+                        Padding(
+                          padding: padding,
+                          child: Text(
+                            'Benchmark',
+                            style: TextStyle(fontSize: 22, fontFamily: 'Akaya'),
+                          ),
+                        ),
+                      if (dataPicked)
+                        Padding(
+                          padding: padding,
+                          child: Container(
+                              width: 300,
+                              child: dropDownButton(
+                                  items: headers, value: benchmarkValue)),
                         ),
                       if (dataPicked)
                         Padding(
