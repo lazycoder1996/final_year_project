@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:csv/csv.dart';
 import 'package:final_project/computations/precise_levelling.dart';
 import 'package:final_project/computations/simple_levelling.dart';
 import 'package:final_project/functions.dart';
 import 'package:final_project/results/simple_levelling.dart';
+import 'package:final_project/utils/download.dart';
 import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:file_access/file_access.dart';
@@ -471,6 +475,15 @@ class LevellingState extends State<Levelling> {
                     child: ListView(
                       scrollDirection: Axis.horizontal,
                       children: [
+                        if (computationsDone)
+                          TextButton(
+                              child: Text('Download'),
+                              onPressed: () {
+                                var result =
+                                    ListToCsvConverter().convert(results);
+                                download(result.codeUnits,
+                                    downloadName: '$_fileName results');
+                              }),
                         if (computationsDone)
                           TextButton(
                             child: Text('Plot'),
