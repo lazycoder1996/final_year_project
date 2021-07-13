@@ -482,7 +482,8 @@ class LevellingState extends State<Levelling> {
                                 var result =
                                     ListToCsvConverter().convert(results);
                                 download(result.codeUnits,
-                                    downloadName: '$_fileName results');
+                                    downloadName:
+                                        '${_fileName.split(".")[0]} result.csv');
                               }),
                         if (computationsDone)
                           TextButton(

@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                     direction: Axis.horizontal,
                     children: [
                       itemCard(
-                          title: 'muj',
+                          title: 'LEVELLING',
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => Levelling()));
