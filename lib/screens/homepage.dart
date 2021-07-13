@@ -1,5 +1,5 @@
-import 'package:final_project/tools_ui/levelling_ui.dart';
-import 'package:final_project/tools_ui/traversing_ui.dart';
+import 'package:final_project/tools_ui/levellingInterface.dart';
+import 'package:final_project/tools_ui/traversingInterface.dart';
 import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';

@@ -1,15 +1,11 @@
-import 'dart:io';
-
 import 'package:csv/csv.dart';
-import 'package:final_project/computations/precise_levelling.dart';
-import 'package:final_project/computations/simple_levelling.dart';
+import 'package:final_project/computations/preciseLevellingComp.dart';
+import 'package:final_project/computations/simpleLevellingComp.dart';
 import 'package:final_project/functions.dart';
-import 'package:final_project/results/simple_levelling.dart';
+import 'package:final_project/results/simpleLevellingResults.dart';
 import 'package:final_project/utils/download.dart';
 import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:file_access/file_access.dart';
-import 'dart:math' as math;
 
 class Levelling extends StatefulWidget {
   @override
