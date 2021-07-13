@@ -52,7 +52,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/images/
+    - images/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
@@ -72,39 +72,39 @@ flutter:
   fonts:
     - family: Berkshire
       fonts:
-        - asset: assets/fonts/BerkshireSwash-Regular.ttf
+        - asset: fonts/BerkshireSwash-Regular.ttf
     - family: Caveat
       fonts:
-        - asset: assets/fonts/Caveat-Bold.ttf
-        - asset: assets/fonts/Caveat-Medium.ttf
-        - asset: assets/fonts/Caveat-Regular.ttf
-        - asset: assets/fonts/Caveat-SemiBold.ttf
-        - asset: assets/fonts/Caveat-VariableFont_wght.ttf
+        - asset: fonts/Caveat-Bold.ttf
+        - asset: fonts/Caveat-Medium.ttf
+        - asset: fonts/Caveat-Regular.ttf
+        - asset: fonts/Caveat-SemiBold.ttf
+        - asset: fonts/Caveat-VariableFont_wght.ttf
     - family: IndieFlower
       fonts:
-        - asset: assets/fonts/IndieFlower-Regular.ttf
+        - asset: fonts/IndieFlower-Regular.ttf
     - family: Satisfy
       fonts:
-        - asset: assets/fonts/Satisfy-Regular.ttf
+        - asset: fonts/Satisfy-Regular.ttf
     - family: Akaya
       fonts:
-        - asset: assets/fonts/AkayaTelivigala-Regular.ttf
+        - asset: fonts/AkayaTelivigala-Regular.ttf
     - family: Medieval
       fonts:
-        - asset: assets/fonts/MedievalSharp-Regular.ttf
+        - asset: fonts/MedievalSharp-Regular.ttf
     - family: Inika
       fonts:
-        - asset: assets/fonts/Inika-Bold.ttf
-        - asset: assets/fonts/Inika-Regular.ttf
+        - asset: fonts/Inika-Bold.ttf
+        - asset: fonts/Inika-Regular.ttf
     - family: Redressed
       fonts:
-        - asset: assets/fonts/Redressed-Regular.ttf
+        - asset: fonts/Redressed-Regular.ttf
     - family: Maths
       fonts:
-        - asset: assets/fonts/math_variable.ttf
+        - asset: fonts/math_variable.ttf
     - family: Latex
       fonts:
-        - asset: assets/fonts/cmunssdc.ttf
+        - asset: fonts/cmunssdc.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
