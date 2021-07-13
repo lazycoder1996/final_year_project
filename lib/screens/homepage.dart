@@ -1,5 +1,5 @@
-import 'package:final_project/tools/levelling.dart';
-import 'package:final_project/tools/traversing.dart';
+import 'package:final_project/tools_ui/levelling_ui.dart';
+import 'package:final_project/tools_ui/traversing_ui.dart';
 import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_pro/carousel_pro.dart';
@@ -66,15 +66,17 @@ class _HomePageState extends State<HomePage> {
                       animationDuration: Duration(milliseconds: 400),
                       animationCurve: Curves.easeInQuint,
                       images: [
-                        Image.asset(
+                        Image(
+                            image: AssetImage(
                           'images/theo.jpeg',
-                        ),
-                        Image.asset(
-                          'images/survey_with_theo.jpg',
-                          fit: BoxFit.fill,
-                        ),
-                        Image.asset('images/sekina.jpeg'),
-                        Image.asset('images/field_work.jpg'),
+                        )),
+                        Image(
+                            fit: BoxFit.fill,
+                            image: AssetImage(
+                              'images/survey_with_theo.jpg',
+                            )),
+                        Image(image: AssetImage('images/sekina.jpeg')),
+                        Image(image: AssetImage('images/field_work.jpg')),
                       ]),
                 ),
                 Padding(

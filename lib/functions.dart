@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:math';
 import 'package:csv/csv.dart' as csv;
+import 'package:csv/csv.dart';
 import 'package:file_access/file_access.dart';
 import 'package:flutter/material.dart';
 
@@ -37,6 +39,45 @@ num backBearing(num foreBearing) {
   return foreBearing < 180 ? 180 + foreBearing : foreBearing - 180;
 }
 
+List<List<dynamic>> readFile(String csvString) {
+  try {
+    // var myCsv = File(filePath);
+    // var csvString = myCsv.readAsStringSync();
+    var converter = CsvToListConverter(
+      fieldDelimiter: ',',
+      eol: '\r\n',
+    );
+    List<List<dynamic>> data = converter.convert(csvString);
+    return data;
+  } catch (e) {
+    print('File path not found');
+  }
+  return null;
+}
+
+// Future<String> chooseFile() async {
+//   final _myFile = await openFile();
+//   String _fileName = '';
+//   String dataFile = '';
+//   if (_myFile != null) {
+//     await _myFile.readAsString().then((file) {
+//       _fileName = _myFile.path;
+//       dataFile = file;
+//       // extractHeaders(file);
+//     }
+// , onError: (error) {
+//   print(error.toString());
+//   errorAlert(
+//       context: context,
+//       content: 'The selected file is not a csv type. Please try again');
+// }
+// );
+//   } else {
+//     print('user cancelled operation');
+//   }
+//   return dataFile;
+// }
+
 Future<Map<String, dynamic>> chooseFile() async {
   String fileName = '';
   String csvString;
@@ -50,14 +91,14 @@ Future<Map<String, dynamic>> chooseFile() async {
   return {'csvString': csvString, 'fileName': fileName};
 }
 
-List<List> csvToList(String csvString) {
-  csv.CsvToListConverter c = new csv.CsvToListConverter(
-    eol: "\r\n",
-    fieldDelimiter: ",",
-  );
-  List<List> csvData = c.convert(csvString);
-  return csvData;
-}
+// List<List> csvToList(String csvString) {
+//   csv.CsvToListConverter c = new csv.CsvToListConverter(
+//     eol: "\r\n",
+//     fieldDelimiter: ",",
+//   );
+//   List<List> csvData = c.convert(csvString);
+//   return csvData;
+// }
 
 List<dynamic> extractHeaders(List<List<dynamic>> csvData) {
   return csvData[0].map((e) => e.toString()).toList();

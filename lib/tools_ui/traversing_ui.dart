@@ -400,7 +400,7 @@ class _TraversingState extends State<Traversing> {
                                       await chooseFile().then((result) {
                                         setState(() {
                                           traverseData =
-                                              csvToList(result['csvString']);
+                                              readFile(result['csvString']);
                                           _fileName = result['fileName'];
                                           dataHeaders =
                                               extractHeaders(traverseData);
