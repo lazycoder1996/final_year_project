@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                       indicatorBgPadding: 5,
                       dotBgColor: Colors.teal,
                       showIndicator: true,
-                      autoplayDuration: Duration(seconds: 4),
+                      autoplayDuration: Duration(seconds: 7),
                       animationDuration: Duration(milliseconds: 400),
                       animationCurve: Curves.easeInQuint,
                       images: [
