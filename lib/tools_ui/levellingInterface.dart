@@ -477,9 +477,11 @@ class LevellingState extends State<Levelling> {
                               onPressed: () {
                                 var result =
                                     ListToCsvConverter().convert(results);
-                                download(result.codeUnits,
+                                var data =
+                                    addFilesToZip(result, 'processed data.csv');
+                                download(data,
                                     downloadName:
-                                        '${_fileName.split(".")[0]} result.csv');
+                                        '${_fileName.split(".")[0]} result.zip');
                               }),
                         if (computationsDone)
                           TextButton(
