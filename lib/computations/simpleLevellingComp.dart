@@ -483,6 +483,52 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
   }
   dataHeadings.add('Benchmark');
   processedData[0] = dataHeadings;
-  print('result is $processedData');
-  return processedData;
+  // print('result is $processedData');
+  backSight.removeWhere((element) => element == '');
+  int rks = processedData[0].indexOf("Remarks");
+  List remarks = [];
+  for (var i in processedData.sublist(1)) {
+    remarks.add(i[rks]);
+  }
+  print('remarks are $remarks');
+  List reportBM = [];
+  n = 0;
+  for (var i = 0; i < remarks.length; i++) {
+    if (benchmark[i] != '') {
+      reportBM.add('-   ${remarks[i]} (${benchmark[i]})');
+    }
+  }
+  String benchmarksIdentified = reportBM.join("\r\n");
+  List summary = [];
+  for (var i = 0; i < remarks.length; i++) {
+    if (benchmark[i] != '') {
+      String error =
+          (initialReducedLevels[i] - benchmark[i]).toStringAsFixed(3);
+      summary.add(
+          '${remarks[i]}\t\t${benchmark[i]}\t\t${initialReducedLevels[i]}\t\t$error');
+    }
+  }
+
+  String misclosureSummary = summary.join("\r\n");
+  return [
+    processedData,
+    {
+      'Benchmarks identified': benchmarksIdentified,
+      'Total number of instrument setup': backSight.length,
+      'Sum of backsight': sumOfBs,
+      'Sum of foresight': sumOfFs,
+      'Arithmetic check': arithmeticCheck,
+      'Method of computation': initMethod,
+      'Accuracy factor k': initAccuracy,
+      'Acceptable Misclosure': allowableMisclose,
+      'sum of rise': sumOfRise,
+      'sum of fall': sumOfFall,
+      'check': (diffBtnBsAndFs - sumOfHeights).roundToDouble().toInt(),
+      'Project Misclosue': error,
+      'Project condition': 'Since PM ' +
+          (misclose == 'accepted' ? '<' : '>') +
+          ' AM, the error associated with this project is $misclose',
+      'Summary': misclosureSummary
+    }
+  ];
 }
