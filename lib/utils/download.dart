@@ -26,14 +26,17 @@ void download(
   return;
 }
 
-List<int> addFilesToZip(String result, String fileName) {
+List<int> addFilesToZip({Map csvFile, Map reportFile}) {
+  final bytes = utf8.encode(reportFile['data']);
+  final blob = html.Blob([bytes]);
   // String jsonEncoded = jsonEncode(list);
-  List<int> utf8encoded = utf8.encode(result);
+  List<int> utf8encoded = utf8.encode(csvFile['data']);
   ArchiveFile processedData =
-      new ArchiveFile(fileName, utf8encoded.length, utf8encoded);
+      new ArchiveFile(csvFile['filename'], utf8encoded.length, utf8encoded);
+  ArchiveFile report = ArchiveFile(reportFile['filename'], bytes.length, bytes);
   Archive zipArchive = new Archive();
   zipArchive.addFile(processedData);
-  // add text file
+  zipArchive.addFile(report);
   // add plot
   List<int> zipInBytes = new ZipEncoder().encode(zipArchive);
   return zipInBytes;
