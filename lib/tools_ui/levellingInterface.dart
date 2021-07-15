@@ -6,6 +6,7 @@ import 'package:final_project/results/simpleLevellingResults.dart';
 import 'package:final_project/utils/download.dart';
 import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Levelling extends StatefulWidget {
   @override
@@ -57,6 +58,7 @@ class LevellingState extends State<Levelling> {
   List<List<dynamic>> rawData = [];
 
   List<List<dynamic>> results = [];
+  Map errorReport = {};
 
   String initMethod = 'Rise or Fall';
   String selectedComputation = 'Rise and Fall';
@@ -90,22 +92,22 @@ class LevellingState extends State<Levelling> {
       onChanged: (newValue) {
         // TODO:
         // check setstate for this
-        // setState(() {
-        //   if (value == initMethod) initMethod = newValue;
-        //   if (value == benchmarkValue) benchmarkValue = newValue.toString();
-        //   if (value == backsightDropDownValue)
-        //     backsightDropDownValue = newValue.toString();
-        //   if (value == foresightDropDownValue)
-        //     foresightDropDownValue = newValue.toString();
-        //   if (value == intersightDropDownValue)
-        //     intersightDropDownValue = newValue.toString();
-        //   if (value == upperStadiaValue) upperStadiaValue = newValue.toString();
-        //   if (value == lowerStadiaValue) lowerStadiaValue = newValue.toString();
-        //   if (value == middleStadiaValue)
-        //     middleStadiaValue = newValue.toString();
-        //   if (value == digitalReadingValue)
-        //     digitalReadingValue = newValue.toString();
-        // });
+        setState(() {
+          if (value == initMethod) initMethod = newValue;
+          //   if (value == benchmarkValue) benchmarkValue = newValue.toString();
+          //   if (value == backsightDropDownValue)
+          //     backsightDropDownValue = newValue.toString();
+          //   if (value == foresightDropDownValue)
+          //     foresightDropDownValue = newValue.toString();
+          //   if (value == intersightDropDownValue)
+          //     intersightDropDownValue = newValue.toString();
+          //   if (value == upperStadiaValue) upperStadiaValue = newValue.toString();
+          //   if (value == lowerStadiaValue) lowerStadiaValue = newValue.toString();
+          //   if (value == middleStadiaValue)
+          //     middleStadiaValue = newValue.toString();
+          //   if (value == digitalReadingValue)
+          //     digitalReadingValue = newValue.toString();
+        });
       },
       items: items.map((e) {
         return DropdownMenuItem(
@@ -434,9 +436,11 @@ class LevellingState extends State<Levelling> {
                                       initialValues,
                                       initMethod,
                                       initAccuracy);
-                                  results = compute;
-                                  dataHeadings = compute[0];
+                                  results = compute[0];
+                                  errorReport = compute[1];
+                                  dataHeadings = compute[0][0];
                                   computationsDone = true;
+                                  print('results are $errorReport');
                                 });
                               } else if (radioValue == LevellingType.precise) {
                                 setState(() {
@@ -477,8 +481,34 @@ class LevellingState extends State<Levelling> {
                               onPressed: () {
                                 var result =
                                     ListToCsvConverter().convert(results);
-                                var data =
-                                    addFilesToZip(result, 'processed data.csv');
+                                // var errorReport = results
+                                var data = addFilesToZip(csvFile: {
+                                  'data': result,
+                                  'filename': 'processed data.csv',
+                                }, reportFile: {
+                                  'data': 'Processing Report\r\n'
+                                          'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n\r\n'
+                                          'Benchmarks identified\r\n'
+                                          '${errorReport['Benchmarks identified']}\r\n\r\n'
+                                          'Total number of instrument setup: ${errorReport['Total number of instrument setup']}\r\n\r\n'
+                                          'Arithmetic Check\r\n'
+                                          'Sum of backsight = ${errorReport['Sum of backsight']}\r\n'
+                                          'Sum of foresight = ${errorReport['Sum of foresight']}\r\n' +
+                                      (errorReport.containsValue('Rise or Fall')
+                                          ? 'Sum of rise = ${errorReport['sum of rise']}\r\nSum of fall = '
+                                              '${errorReport['sum of fall']}\r\nΣBS + ΣFS - ΣRise - ΣFall = ${errorReport['check']}\r\n'
+                                          : '') +
+                                      'Arithmetically ${errorReport['Arithmetic check']}\r\n\r\n'
+                                          'Method of computation: ${errorReport['Method of computation']}\r\n'
+                                          'Accuracy factor, k: ${errorReport['Accuracy factor k']}\r\n'
+                                          'Acceptable Misclosure: ${errorReport['Acceptable Misclosure']}\r\n'
+                                          'Project Misclosure: ${errorReport['Project Misclosue']}\r\n'
+                                          '${errorReport['Project condition']}\r\n\r\n'
+                                          'Summary of misclosure\r\n'
+                                          'Benchmark\t\tTrue value\t\tComputed value\tError\r\n'
+                                          '${errorReport['Summary']}',
+                                  'filename': 'processing report.txt'
+                                });
                                 download(data,
                                     downloadName:
                                         '${_fileName.split(".")[0]} result.zip');
