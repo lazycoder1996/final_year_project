@@ -1,7 +1,7 @@
 import 'package:csv/csv.dart';
-import 'package:final_project/computations/preciseLevellingComp.dart';
-import 'package:final_project/computations/simpleLevellingComp.dart';
-import 'package:final_project/functions.dart';
+import 'package:final_project/computations/levelling/preciseLevellingComp.dart';
+import 'package:final_project/computations/levelling/simpleLevellingComp.dart';
+import 'package:final_project/genFunctions.dart';
 import 'package:final_project/results/simpleLevellingResults.dart';
 import 'package:final_project/utils/download.dart';
 import 'package:final_project/utils/widgets.dart';
