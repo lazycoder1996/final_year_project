@@ -1,7 +1,10 @@
+import 'package:csv/csv.dart';
 import 'package:final_project/computations/traversing/linkTraverseComp.dart';
 import 'package:final_project/genFunctions.dart';
+import 'package:final_project/utils/download.dart';
 import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class Traversing extends StatefulWidget {
   @override
@@ -12,6 +15,8 @@ class _TraversingState extends State<Traversing> {
   String _fileName = '';
   bool dataPicked = false;
   String typeOfTraverseDropdown = 'Closed Loop';
+  List<List<dynamic>> res = [];
+  Map<String, dynamic> errorReport = {};
   String backsightDropdown;
   String foresightDropdown;
   String stationDropdown;
@@ -39,8 +44,8 @@ class _TraversingState extends State<Traversing> {
   }
 
   void putDropdownValues(List<dynamic> headers) {
-    stationDropdown = headers[0].toString();
-    backsightDropdown = headers[1].toString();
+    backsightDropdown = headers[0].toString();
+    stationDropdown = headers[1].toString();
     foresightDropdown = headers[2].toString();
     circleReadingsDropdown = headers[4].toString();
     distanceDropdown = headers[5].toString();
@@ -49,7 +54,7 @@ class _TraversingState extends State<Traversing> {
 
   List<dynamic> backsightData = [];
   List<dynamic> foresightData = [];
-  List<String> stationData = [];
+  List<dynamic> stationData = [];
   List<dynamic> circleReadings = [];
   List<dynamic> distanceData = [];
   List<dynamic> controls = [];
@@ -395,24 +400,71 @@ class _TraversingState extends State<Traversing> {
                                   items: ['Bowditch', 'Transit'],
                                   value: adjustmentMethodDropdown)),
                         ),
-                      Padding(
-                          padding: EdgeInsets.all(20),
-                          child: processButton(onPressed: () {
-                            fileChosen(traverseData, dataHeaders);
-                            if (typeOfTraverseDropdown == 'Link') {
-                              linkTraverse(
-                                  adjustBy: adjustmentMethodDropdown,
-                                  rawValues: {
-                                    'backsight': backsightData,
-                                    'foresight': foresightData,
-                                    'station': stationData,
-                                    'circle': circleReadings,
-                                    'distance': distanceData,
-                                    'control': controls
-                                  });
-                            }
-                            setState(() {});
-                          }))
+                      if (dataPicked)
+                        Padding(
+                            padding: EdgeInsets.all(20),
+                            child: processButton(onPressed: () {
+                              print('fileName is $_fileName');
+                              print(
+                                  'type of traverse is $typeOfTraverseDropdown');
+                              setState(() {
+                                fileChosen(traverseData, dataHeaders);
+                                if (typeOfTraverseDropdown == 'Closed Link') {
+                                  print('traverse data is $traverseData');
+                                  var results = linkTraverse(
+                                      traverseData: traverseData,
+                                      adjustBy: adjustmentMethodDropdown,
+                                      rawValues: {
+                                        'backsight': backsightData,
+                                        'foresight': foresightData,
+                                        'station': stationData,
+                                        'circle': circleReadings,
+                                        'distance': distanceData,
+                                        'control': controls
+                                      });
+                                  res = results[0];
+                                  errorReport = results[1];
+                                }
+                                // print('res is $res');
+                                var result = ListToCsvConverter().convert(res);
+
+                                download(
+                                    addFilesToZip(
+                                      reportFile: {
+                                        'filename': 'processing report.txt',
+                                        'data': 'Processing Report\r\n'
+                                            'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n\r\n'
+                                            'Points of depature\r\n'
+                                            '${errorReport['departure']}\r\n'
+                                            'Points of closure\r\n'
+                                            '${errorReport['closure']}\r\n\r\n'
+                                            'Arithmetic check\r\n'
+                                            'Number of instrument station: ${errorReport['setup']}\r\n'
+                                            'Observed sum of included angles: ${errorReport['observed sum angles']}\r\n'
+                                            'Expected sum of included angles: ${errorReport['expected sum angles']}\r\n'
+                                            'Error: ${errorReport['error']}\r\n'
+                                            'Adjustment per station: ${errorReport['adj per station']}\r\n\r\n'
+                                            'Misclosure\r\n'
+                                            'Method of adjusting coordinates: ${errorReport['adj By']}\r\n'
+                                            'Observed sum of departures: ${errorReport['sum of dep']}\r\n'
+                                            'Expected sum of depatures: ${errorReport['exp sum of dep']}\r\n'
+                                            'Error in departure: ${errorReport['error in dep']}\r\n'
+                                            'Observed sum of latitudes: ${errorReport['sum of lat']}\r\n'
+                                            'Expected sum of latitudes: ${errorReport['exp sum of lat']}\r\n'
+                                            'Error in latitude: ${errorReport['error in lat']}\r\n'
+                                            'Observed sum of distances: ${errorReport['sum dist']}\r\n'
+                                            'Linear misclose: ${errorReport['linear misclose']}\r\n'
+                                            'Fractional misclose: ${errorReport['fractional misclose']}'
+                                      },
+                                      csvFile: {
+                                        'data': result,
+                                        'filename': 'processed data.csv'
+                                      },
+                                    ),
+                                    downloadName:
+                                        '${_fileName.split(".")[0]} result.zip');
+                              });
+                            }))
                     ],
                   ),
                 ),

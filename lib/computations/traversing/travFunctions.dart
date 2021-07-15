@@ -94,7 +94,7 @@ num whichToUse(num initialBearing, num endBearing) {
 }
 
 // adjust included angles
-List<List<dynamic>> adjustIncludedAnglesLink(
+adjustIncludedAnglesLink(
     {List<dynamic> includedAngles,
     num finalForwardBearing,
     num initialBackBearing}) {
@@ -119,7 +119,10 @@ List<List<dynamic>> adjustIncludedAnglesLink(
     adjustment[0].add(adjPerStation);
     adjustment[1].add(adjPerStation + i);
   }
-  return adjustment;
+  return {
+    'results': adjustment,
+    'error': [sumAngles, expectedSum, error, adjPerStation]
+  };
 }
 
 num minimum(List numbers) {
@@ -242,12 +245,14 @@ List<List<dynamic>> computeDepLat(
 // }
 
 // adjusting lat and dep for loop
-List<List<dynamic>> adjustDepLat(
+adjustDepLat(
     {String adjustmentMethod,
     List<List<dynamic>> initialDepLat,
     List<dynamic> checkControls,
     String typeOfTraverse,
     List<dynamic> distances}) {
+  var expectedSumDep;
+  var expectedSumLat;
   var adjLat = typeOfTraverse != null ? [] : <dynamic>[''];
   var adjDep = typeOfTraverse != null ? [] : <dynamic>[''];
   var correctedLat = typeOfTraverse != null ? [] : <dynamic>[''];
@@ -278,10 +283,10 @@ List<List<dynamic>> adjustDepLat(
   num errorInDep = 0;
   num errorInLat = 0;
   if (adjustmentMethod == 'Transit') {
-    if (typeOfTraverse == 'Link') {
-      var expectedSumDep =
+    if (typeOfTraverse == 'Closed Link') {
+      expectedSumDep =
           num.parse(checkControls[2]) - num.parse(checkControls[0]);
-      var expectedSumLat =
+      expectedSumLat =
           num.parse(checkControls[3]) - num.parse(checkControls[1]);
       errorInDep = sumDep - expectedSumDep;
       errorInLat = sumLat - expectedSumLat;
@@ -302,11 +307,11 @@ List<List<dynamic>> adjustDepLat(
     var size = initialDepLat[0].length;
     try {
       while (typeOfTraverse != null ? (n < size) : (n < size - 1)) {
-        adjDep.add(((typeOfTraverse == 'Link' ? -errorInDep : -sumDep) *
+        adjDep.add(((typeOfTraverse == 'Closed Link' ? -errorInDep : -sumDep) *
                 initialDepLat[0][n].abs()) /
             absoluteSumDep);
         correctedDep.add(adjDep[n] + initialDepLat[0][n]);
-        adjLat.add(((typeOfTraverse == 'Link' ? -errorInLat : -sumLat) *
+        adjLat.add(((typeOfTraverse == 'Closed Link' ? -errorInLat : -sumLat) *
                 initialDepLat[1][n].abs()) /
             absoluteSumLat);
         correctedLat.add(adjLat[n] + initialDepLat[1][n]);
@@ -318,10 +323,10 @@ List<List<dynamic>> adjustDepLat(
     // print('sum dist is $sumDistances');
     // print('sum dep is $sumDep');
     // print('sum lat is $sumLat');
-    if (typeOfTraverse == 'Link') {
-      var expectedSumDep =
+    if (typeOfTraverse == 'Closed Link') {
+      expectedSumDep =
           num.parse(checkControls[2]) - num.parse(checkControls[0]);
-      var expectedSumLat =
+      expectedSumLat =
           num.parse(checkControls[3]) - num.parse(checkControls[1]);
       errorInDep = sumDep - expectedSumDep;
       errorInLat = sumLat - expectedSumLat;
@@ -360,7 +365,32 @@ List<List<dynamic>> adjustDepLat(
   var fracMisclose = '1 in ${fractionalMisclose.round()}';
   print('fractional misclose is $fracMisclose');
   print('linear misclose is ${linearMisclose.toStringAsFixed(4)}');
-  return [adjDep, correctedDep, adjLat, correctedLat];
+  return {
+    'results': [adjDep, correctedDep, adjLat, correctedLat],
+    'error': typeOfTraverse == 'Closed Link'
+        ? [
+            sumDep,
+            sumLat,
+            expectedSumDep,
+            expectedSumLat,
+            errorInDep,
+            errorInLat,
+            sumDistances,
+            linearMisclose,
+            fracMisclose
+          ]
+        : [
+            sumDep,
+            sumLat,
+            0,
+            0,
+            sumDep,
+            sumLat,
+            sumDistances,
+            linearMisclose,
+            fracMisclose
+          ]
+  };
 }
 // print()
 
@@ -374,12 +404,14 @@ List<List<dynamic>> computeEastingNorthing(
     [controls[1]]
   ];
   try {
-    for (var i = typeOfTraverse == 'Link' ? 0 : 1; i <= depLat[1].length; i++) {
+    for (var i = typeOfTraverse == 'Closed Link' ? 0 : 1;
+        i <= depLat[1].length;
+        i++) {
       eastingNorthing[0].add(eastingNorthing[0]
-              [typeOfTraverse == 'Link' ? i : i - 1] +
+              [typeOfTraverse == 'Closed Link' ? i : i - 1] +
           depLat[1][i]);
       eastingNorthing[1].add(eastingNorthing[1]
-              [typeOfTraverse == 'Link' ? i : i - 1] +
+              [typeOfTraverse == 'Closed Link' ? i : i - 1] +
           depLat[3][i]);
     }
   } catch (e) {}
@@ -453,8 +485,8 @@ String deg2DMS(myNumber) {
   var degreesStandard = degrees.toString();
   var minutesStandard = minutes.toString();
   var sec = seconds.toString();
-  var endSec = sec.substring(sec.indexOf('.') + 1);
-  var secondsStandard = sec.substring(0, sec.indexOf('.'));
+  // var endSec = sec.substring(sec.indexOf('.') + 1);
+  // var secondsStandard = sec.substring(0, sec.indexOf('.'));
   if (degreesStandard.length == 1) {
     degreesStandard = '00' + degreesStandard;
   } else if (degreesStandard.length == 2) {
@@ -467,14 +499,14 @@ String deg2DMS(myNumber) {
   } else {
     minutesStandard = minutesStandard;
   }
-  if (secondsStandard.length == 1) {
-    secondsStandard = '0' + secondsStandard;
-  } else {
-    secondsStandard = secondsStandard;
-  }
-  if (endSec.length == 1) {
-    endSec = endSec + '0';
-  }
+  // if (secondsStandard.length == 1) {
+  //   secondsStandard = '0' + secondsStandard;
+  // } else {
+  //   secondsStandard = secondsStandard;
+  // }
+  // if (endSec.length == 1) {
+  //   endSec = endSec + '0';
+  // }
   // else if (endSec.length == 2) {
   //   endSec = endSec + '00';
   // } else if (endSec.length == 3) {
@@ -482,14 +514,7 @@ String deg2DMS(myNumber) {
   // } else {
   //   endSec = endSec;
   // }
-  return sign +
-      degreesStandard +
-      ' ' +
-      minutesStandard +
-      ' ' +
-      secondsStandard +
-      '.' +
-      endSec;
+  return sign + degreesStandard + ' ' + minutesStandard + ' ' + sec;
 }
 
 num dms2Deg(String dms) {

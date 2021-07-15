@@ -1,8 +1,9 @@
 import 'package:final_project/computations/traversing/travFunctions.dart';
-import 'package:final_project/genFunctions.dart';
 
-void linkTraverse({String adjustBy, Map<String, dynamic> rawValues}) {
-  var traverseData = readFile('C:/Users/muj/Desktop/MsFiles/link_traverse.csv');
+linkTraverse(
+    {String adjustBy,
+    Map<String, dynamic> rawValues,
+    List<List<dynamic>> traverseData}) {
   var dataSize = traverseData.length;
   var backsightData = rawValues['backsight'];
   var foresightData = rawValues['foresight'];
@@ -26,7 +27,10 @@ void linkTraverse({String adjustBy, Map<String, dynamic> rawValues}) {
   // initial distance and bearing
   var firstControl = controls[0].toString().split(',');
   var secondControl = controls[1].toString().split(',');
-
+  List departure = [
+    "- ${backsightData[0]} (${firstControl[0]}, ${firstControl[1]})",
+    "- ${stationData[0]} (${secondControl[0]}, ${secondControl[1]})",
+  ];
   var initDistBear = forwardGeodetic(
       num.parse(firstControl[0]),
       num.parse(firstControl[1]),
@@ -38,6 +42,10 @@ void linkTraverse({String adjustBy, Map<String, dynamic> rawValues}) {
   var endFirstControl = controls[2].split(',');
   var endSecondControl = controls.last.split(',');
 
+  List closure = [
+    "- ${stationData.last} (${endFirstControl[0]}, ${endFirstControl[1]})",
+    "- ${foresightData[foresightData.length - 1]} (${endSecondControl[0]}, ${endSecondControl[1]})",
+  ];
   var finalDistBear = forwardGeodetic(
       num.parse(endFirstControl[0]),
       num.parse(endFirstControl[1]),
@@ -60,7 +68,7 @@ void linkTraverse({String adjustBy, Map<String, dynamic> rawValues}) {
   print('adjusted included angles are $adjustedIncludedAngles');
   // calculating initial bearings
   var initialBearings = computeBearings(
-      includedAngles: adjustedIncludedAngles[1],
+      includedAngles: adjustedIncludedAngles['results'][1],
       initialBearing: initDistBear[1]);
   print('initial bearings are $initialBearings');
   // adjusting initial bearings
@@ -89,14 +97,14 @@ void linkTraverse({String adjustBy, Map<String, dynamic> rawValues}) {
       ],
       distances: distanceData,
       initialDepLat: initDepLat,
-      typeOfTraverse: 'Link');
+      typeOfTraverse: 'Closed Link');
   print('adjusted dep lat are $adjustedDepLat');
 
   // final coordinates
   var finalCoordinates = computeEastingNorthing(
-    typeOfTraverse: 'Link',
+    typeOfTraverse: 'Closed Link',
     controls: [num.parse(secondControl[0]), num.parse(secondControl[1])],
-    depLat: adjustedDepLat,
+    depLat: adjustedDepLat['results'],
   );
   print('final coordinates are $finalCoordinates');
 
@@ -140,20 +148,20 @@ void linkTraverse({String adjustBy, Map<String, dynamic> rawValues}) {
   var m = 1;
   try {
     while (n <= finalCoordinates[0].length) {
-      output.insert(m + 1, [
+      output.add([
         stationData[n],
         stationData[n + 1],
         deg2DMS(includedAngles[n]),
-        deg2DMS(adjustedIncludedAngles[0][n]),
-        deg2DMS(adjustedIncludedAngles[1][n]),
+        deg2DMS(adjustedIncludedAngles['results'][0][n]),
+        deg2DMS(adjustedIncludedAngles['results'][1][n]),
         distanceData[n],
         deg2DMS(initialBearings[n]),
         (initDepLat[0][n]).toStringAsFixed(4),
-        (adjustedDepLat[0][n]).toStringAsFixed(4),
-        (adjustedDepLat[1][n]).toStringAsFixed(4),
+        (adjustedDepLat['results'][0][n]).toStringAsFixed(4),
+        (adjustedDepLat['results'][1][n]).toStringAsFixed(4),
         (initDepLat[1][n]).toStringAsFixed(4),
-        (adjustedDepLat[2][n]).toStringAsFixed(4),
-        (adjustedDepLat[3][n]).toStringAsFixed(4),
+        (adjustedDepLat['results'][2][n]).toStringAsFixed(4),
+        (adjustedDepLat['results'][3][n]).toStringAsFixed(4),
         (finalCoordinates[0].sublist(1)[n]).toStringAsFixed(4),
         (finalCoordinates[1].sublist(1)[n]).toStringAsFixed(4)
       ]);
@@ -161,4 +169,27 @@ void linkTraverse({String adjustBy, Map<String, dynamic> rawValues}) {
       m++;
     }
   } catch (e) {}
+  print('output is $output');
+  return [
+    output,
+    {
+      'departure': departure.join("\r\n"),
+      'closure': closure.join('\r\n'),
+      'setup': includedAngles.length,
+      'adj By': adjustBy,
+      'observed sum angles': adjustedIncludedAngles['error'][0],
+      'expected sum angles': adjustedIncludedAngles['error'][1],
+      'error': adjustedIncludedAngles['error'][2],
+      'adj per station': adjustedIncludedAngles['error'][3],
+      'sum of dep': adjustedDepLat['error'][0],
+      'exp sum of dep': adjustedDepLat['error'][2],
+      'sum of lat': adjustedDepLat['error'][1],
+      'error in dep': adjustedDepLat['error'][4],
+      'exp sum of lat': adjustedDepLat['error'][3],
+      'error in lat': adjustedDepLat['error'][5],
+      'sum dist': adjustedDepLat['error'][6],
+      'linear misclose': adjustedDepLat['error'][7],
+      'fractional misclose': adjustedDepLat['error'][8],
+    }
+  ];
 }
