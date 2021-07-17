@@ -234,6 +234,12 @@ class LevellingState extends State<Levelling> {
                                   csvString = value['csvString'];
                                   extractHeaders(value['csvString']);
                                 });
+                              }, onError: (error) {
+                                print(error.toString());
+                                errorAlert(
+                                    context: context,
+                                    content:
+                                        'The selected file is not a csv type. Please try again');
                               });
                             },
                           ),
