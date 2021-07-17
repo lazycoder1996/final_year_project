@@ -1,5 +1,6 @@
 import 'package:csv/csv.dart';
 import 'package:final_project/computations/traversing/linkTraverseComp.dart';
+import 'package:final_project/computations/traversing/loopTraverseComp.dart';
 import 'package:final_project/genFunctions.dart';
 import 'package:final_project/utils/download.dart';
 import 'package:final_project/utils/widgets.dart';
@@ -58,6 +59,7 @@ class _TraversingState extends State<Traversing> {
   List<dynamic> circleReadings = [];
   List<dynamic> distanceData = [];
   List<dynamic> controls = [];
+  var results = [];
 
   void fileChosen(List<List<dynamic>> traverseData, List<String> headers) {
     // extracting actual data
@@ -404,14 +406,14 @@ class _TraversingState extends State<Traversing> {
                         Padding(
                             padding: EdgeInsets.all(20),
                             child: processButton(onPressed: () {
-                              print('fileName is $_fileName');
+                              print('traverse data is $traverseData');
                               print(
                                   'type of traverse is $typeOfTraverseDropdown');
                               setState(() {
                                 fileChosen(traverseData, dataHeaders);
+                                print('done');
                                 if (typeOfTraverseDropdown == 'Closed Link') {
-                                  print('traverse data is $traverseData');
-                                  var results = linkTraverse(
+                                  results = linkTraverse(
                                       traverseData: traverseData,
                                       adjustBy: adjustmentMethodDropdown,
                                       rawValues: {
@@ -424,8 +426,24 @@ class _TraversingState extends State<Traversing> {
                                       });
                                   res = results[0];
                                   errorReport = results[1];
+                                } else {
+                                  print('loop traverse');
+                                  print('backsight data: $backsightData');
+                                  results = loopTraverse(
+                                      adjustBy: adjustmentMethodDropdown,
+                                      traverseData: traverseData,
+                                      rawValues: {
+                                        'backsight': backsightData,
+                                        'foresight': foresightData,
+                                        'station': stationData,
+                                        'circle': circleReadings,
+                                        'distance': distanceData,
+                                        'control': controls
+                                      });
+                                  res = results[0];
+                                  errorReport = results[1];
                                 }
-                                // print('res is $res');
+                                print('report is $errorReport');
                                 var result = ListToCsvConverter().convert(res);
 
                                 download(
@@ -433,28 +451,37 @@ class _TraversingState extends State<Traversing> {
                                       reportFile: {
                                         'filename': 'processing report.txt',
                                         'data': 'Processing Report\r\n'
-                                            'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n\r\n'
-                                            'Points of depature\r\n'
-                                            '${errorReport['departure']}\r\n'
-                                            'Points of closure\r\n'
-                                            '${errorReport['closure']}\r\n\r\n'
-                                            'Arithmetic check\r\n'
-                                            'Number of instrument station: ${errorReport['setup']}\r\n'
-                                            'Observed sum of included angles: ${errorReport['observed sum angles']}\r\n'
-                                            'Expected sum of included angles: ${errorReport['expected sum angles']}\r\n'
-                                            'Error: ${errorReport['error']}\r\n'
-                                            'Adjustment per station: ${errorReport['adj per station']}\r\n\r\n'
+                                                'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n\r\n'
+                                                'Points of depature\r\n'
+                                                '${errorReport['departure']}\r\n'
+                                                'Points of closure\r\n'
+                                                '${errorReport['closure']}\r\n\r\n'
+                                                'Arithmetic check\r\n'
+                                                'Number of instrument station: ${errorReport['setup']}\r\n' +
+                                            (typeOfTraverseDropdown ==
+                                                    'Closed Loop'
+                                                ? 'Observed final bearing :${errorReport['observed final bearing']}\r\n'
+                                                : 'Observed sum of included angles: ${errorReport['observed sum angles']}\r\n') +
+                                            (typeOfTraverseDropdown ==
+                                                    'Closed Loop'
+                                                ? 'Expected final bearing :${errorReport['expected final bearing']}\r\n'
+                                                : 'Expected sum of included angles: ${errorReport['expected sum angles']}\r\n') +
+                                            'Error: ${errorReport['error']}\r\n\r\n' +
+                                            (typeOfTraverseDropdown ==
+                                                    'Closed Loop'
+                                                ? ''
+                                                : 'Adjustment per station: ${errorReport['adj per station']}\r\n\r\n') +
                                             'Misclosure\r\n'
-                                            'Method of adjusting coordinates: ${errorReport['adj By']}\r\n'
-                                            'Observed sum of departures: ${errorReport['sum of dep']}\r\n'
-                                            'Expected sum of depatures: ${errorReport['exp sum of dep']}\r\n'
-                                            'Error in departure: ${errorReport['error in dep']}\r\n'
-                                            'Observed sum of latitudes: ${errorReport['sum of lat']}\r\n'
-                                            'Expected sum of latitudes: ${errorReport['exp sum of lat']}\r\n'
-                                            'Error in latitude: ${errorReport['error in lat']}\r\n'
-                                            'Observed sum of distances: ${errorReport['sum dist']}\r\n'
-                                            'Linear misclose: ${errorReport['linear misclose']}\r\n'
-                                            'Fractional misclose: ${errorReport['fractional misclose']}'
+                                                'Method of adjusting coordinates: ${errorReport['adj By']}\r\n'
+                                                'Observed sum of departures: ${errorReport['sum of dep']}\r\n'
+                                                'Expected sum of depatures: ${errorReport['exp sum of dep']}\r\n'
+                                                'Error in departure: ${errorReport['error in dep']}\r\n'
+                                                'Observed sum of latitudes: ${errorReport['sum of lat']}\r\n'
+                                                'Expected sum of latitudes: ${errorReport['exp sum of lat']}\r\n'
+                                                'Error in latitude: ${errorReport['error in lat']}\r\n'
+                                                'Observed sum of distances: ${errorReport['sum dist']}\r\n'
+                                                'Linear misclose: ${errorReport['linear misclose']}\r\n'
+                                                'Fractional misclose: ${errorReport['fractional misclose']}'
                                       },
                                       csvFile: {
                                         'data': result,
