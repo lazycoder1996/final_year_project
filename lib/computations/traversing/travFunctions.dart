@@ -160,8 +160,8 @@ List<List<dynamic>> adjustIncludedAngles(
 }
 
 // computing bearings
-List<dynamic> computeBearings(
-    {num initialBearing, List<dynamic> includedAngles}) {
+computeBearings(
+    {num initialBearing, List<dynamic> includedAngles, String typeOfTraverse}) {
   var results = <dynamic>[initialBearing];
   var size = includedAngles.length;
   var n = 0;
@@ -172,14 +172,20 @@ List<dynamic> computeBearings(
     }
     // ignore: empty_catches
   } catch (e) {}
-  return results;
+
+  return typeOfTraverse == null
+      ? results
+      : {
+          'results': results,
+          'error': [results.last]
+        };
 }
 
 // adjusting bearings
-List<dynamic> adjustBearings(
+adjustBearings(
     {List<dynamic> initialBearings, String typeOfTraverse, num endBearing}) {
   num error = 0;
-  if (typeOfTraverse == null) {
+  if (typeOfTraverse == 'Closed Loop') {
     error = initialBearings.last - initialBearings.first;
     if (initialBearings.first >= 0 && initialBearings.first < 1) {
       error = whichToUse(initialBearings.first, initialBearings.last);
@@ -188,7 +194,7 @@ List<dynamic> adjustBearings(
     error = initialBearings.last - endBearing;
   }
   num adjustment = 0;
-  if (typeOfTraverse == null) {
+  if (typeOfTraverse == 'Closed Loop') {
     adjustment = error / (initialBearings.length - 1);
   } else {
     adjustment = error / initialBearings.length;
@@ -201,7 +207,12 @@ List<dynamic> adjustBearings(
   for (var i = 0; i < adjPerStation.length; i++) {
     finalBearing.add((initialBearings[i] + adjPerStation[i]) % 360);
   }
-  return [adjPerStation, finalBearing];
+  return typeOfTraverse != 'Closed Link'
+      ? {
+          'results': [adjPerStation, finalBearing],
+          'error': [error]
+        }
+      : [adjPerStation, finalBearing];
 }
 
 // computing lat and dep
@@ -249,28 +260,33 @@ adjustDepLat(
     {String adjustmentMethod,
     List<List<dynamic>> initialDepLat,
     List<dynamic> checkControls,
+    List<dynamic> expLoopTransit,
     String typeOfTraverse,
     List<dynamic> distances}) {
   var expectedSumDep;
   var expectedSumLat;
-  var adjLat = typeOfTraverse != null ? [] : <dynamic>[''];
-  var adjDep = typeOfTraverse != null ? [] : <dynamic>[''];
-  var correctedLat = typeOfTraverse != null ? [] : <dynamic>[''];
-  var correctedDep = typeOfTraverse != null ? [] : <dynamic>[''];
+  var adjLat = typeOfTraverse == 'Closed Link' ? [] : <dynamic>[''];
+  var adjDep = typeOfTraverse != 'Closed Loop' ? [] : <dynamic>[''];
+  var correctedLat = typeOfTraverse != 'Closed Loop' ? [] : <dynamic>[''];
+  var correctedDep = typeOfTraverse != 'Closed Loop' ? [] : <dynamic>[''];
   num sumLat = 0;
   num sumDistances = 0;
   num sumDep = 0;
-  for (var i in (typeOfTraverse != null
+  for (var i in (typeOfTraverse != 'Closed Loop'
       ? initialDepLat[1]
-      : initialDepLat[1].sublist(1))) {
+      : adjustmentMethod == 'Transit'
+          ? initialDepLat[1].sublist(1, initialDepLat[1].length - 1)
+          : initialDepLat[1].sublist(1))) {
     sumLat += i;
   }
-  for (var i in (typeOfTraverse != null
+  for (var i in (typeOfTraverse != 'Closed Loop'
       ? initialDepLat[0]
-      : initialDepLat[0].sublist(1))) {
+      : adjustmentMethod == 'Transit'
+          ? initialDepLat[0].sublist(1, initialDepLat[0].length - 1)
+          : initialDepLat[0].sublist(1))) {
     sumDep += i;
   }
-  for (var i in (typeOfTraverse != null
+  for (var i in (typeOfTraverse != 'Closed Loop'
       ? distances
       : distances.sublist(1, distances.length - 1))) {
     sumDistances += i;
@@ -278,6 +294,7 @@ adjustDepLat(
 
   print('sum dep is $sumDep');
   print('sum lat is $sumLat');
+  print('sum dis is $sumDistances');
   num absoluteSumDep = 0;
   num absoluteSumLat = 0;
   num errorInDep = 0;
@@ -290,30 +307,33 @@ adjustDepLat(
           num.parse(checkControls[3]) - num.parse(checkControls[1]);
       errorInDep = sumDep - expectedSumDep;
       errorInLat = sumLat - expectedSumLat;
+    } else {
+      errorInDep = sumDep - expLoopTransit[0];
+      errorInLat = sumLat - expLoopTransit[1];
     }
-    for (num i in (typeOfTraverse != null
+    for (num i in (typeOfTraverse != 'Closed Loop'
         ? initialDepLat[0]
-        : initialDepLat[0].sublist(1))) {
+        : typeOfTraverse == 'Closed Loop'
+            ? initialDepLat[0].sublist(1, initialDepLat[0].length - 1)
+            : initialDepLat[0].sublist(1))) {
       absoluteSumDep += i.abs();
     }
     print('absolute sum dep is $absoluteSumDep');
-    for (num i in (typeOfTraverse != null
+    for (num i in (typeOfTraverse != 'Closed Loop'
         ? initialDepLat[1]
-        : initialDepLat[1].sublist(1))) {
+        : typeOfTraverse == 'Closed Loop'
+            ? initialDepLat[1].sublist(1, initialDepLat[0].length - 1)
+            : initialDepLat[1].sublist(1))) {
       absoluteSumLat += i.abs();
     }
     print('absolute sum lat is $absoluteSumLat');
-    var n = typeOfTraverse != null ? 0 : 1;
+    var n = typeOfTraverse != 'Closed Loop' ? 0 : 1;
     var size = initialDepLat[0].length;
     try {
-      while (typeOfTraverse != null ? (n < size) : (n < size - 1)) {
-        adjDep.add(((typeOfTraverse == 'Closed Link' ? -errorInDep : -sumDep) *
-                initialDepLat[0][n].abs()) /
-            absoluteSumDep);
+      while (typeOfTraverse != 'Closed Loop' ? (n < size) : (n < size - 1)) {
+        adjDep.add((-errorInDep * initialDepLat[0][n].abs()) / absoluteSumDep);
         correctedDep.add(adjDep[n] + initialDepLat[0][n]);
-        adjLat.add(((typeOfTraverse == 'Closed Link' ? -errorInLat : -sumLat) *
-                initialDepLat[1][n].abs()) /
-            absoluteSumLat);
+        adjLat.add((-errorInLat * initialDepLat[1][n].abs()) / absoluteSumLat);
         correctedLat.add(adjLat[n] + initialDepLat[1][n]);
         n++;
       }
@@ -332,14 +352,14 @@ adjustDepLat(
       errorInLat = sumLat - expectedSumLat;
     }
 
-    var n = typeOfTraverse != null ? 0 : 1;
+    var n = typeOfTraverse != 'Closed Loop' ? 0 : 1;
     var size = distances.length;
     // try {
-    while (typeOfTraverse != null ? (n < size) : (n < size - 1)) {
-      adjDep.add((typeOfTraverse != null ? -errorInDep : -sumDep) *
+    while (typeOfTraverse != 'Closed Loop' ? (n < size) : (n < size - 1)) {
+      adjDep.add((typeOfTraverse != 'Closed Loop' ? -errorInDep : -sumDep) *
           (distances[n] / sumDistances));
       correctedDep.add(adjDep[n] + initialDepLat[0][n]);
-      adjLat.add((typeOfTraverse != null ? -errorInLat : -sumLat) *
+      adjLat.add((typeOfTraverse != 'Closed Loop' ? -errorInLat : -sumLat) *
           ((distances[n] / sumDistances)));
       correctedLat.add(adjLat[n] + initialDepLat[1][n]);
       n++;
@@ -347,7 +367,7 @@ adjustDepLat(
     // } catch (e) {
     //   print(e.toString());
     // }
-    if (typeOfTraverse == null) {
+    if (typeOfTraverse == 'Closed Loop') {
       adjLat.add(0);
       adjDep.add(0);
       correctedDep.add(initialDepLat[0].last);
@@ -357,9 +377,9 @@ adjustDepLat(
 
 // linear misclose and fractional misclose
   var linearMisclose = sqrt(
-      pow(typeOfTraverse != null ? errorInDep : sumDep, 2) +
-          pow(typeOfTraverse != null ? errorInLat : sumLat, 2));
-  var fractionalMisclose = typeOfTraverse != null
+      pow(typeOfTraverse != 'Closed Loop' ? errorInDep : sumDep, 2) +
+          pow(typeOfTraverse != 'Closed Loop' ? errorInLat : sumLat, 2));
+  var fractionalMisclose = typeOfTraverse != 'Closed Link'
       ? (sumDistances) / linearMisclose
       : (sumDistances + distances.first) / linearMisclose;
   var fracMisclose = '1 in ${fractionalMisclose.round()}';
@@ -382,10 +402,10 @@ adjustDepLat(
         : [
             sumDep,
             sumLat,
-            0,
-            0,
-            sumDep,
-            sumLat,
+            adjustmentMethod == 'Transit' ? expLoopTransit[0] : 0,
+            adjustmentMethod == 'Transit' ? expLoopTransit[1] : 0,
+            adjustmentMethod == 'Transit' ? errorInDep : sumDep,
+            adjustmentMethod == 'Transit' ? errorInLat : sumLat,
             sumDistances,
             linearMisclose,
             fracMisclose
