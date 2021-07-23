@@ -222,6 +222,21 @@ Widget textController(
   );
 }
 
+Widget dropDownButton(
+    {List<String> items, String value, void Function(String) onChanged}) {
+  return DropdownButtonFormField(
+    decoration: InputDecoration(border: OutlineInputBorder()),
+    items: items
+        .map((e) => DropdownMenuItem(
+              child: Text(e.toString()),
+              value: e,
+            ))
+        .toList(),
+    value: value,
+    onChanged: onChanged,
+  );
+}
+
 Widget processButton({void Function() onPressed}) {
   return ElevatedButton(
     onPressed: onPressed,
