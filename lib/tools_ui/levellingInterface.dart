@@ -5,6 +5,7 @@ import 'package:final_project/genFunctions.dart';
 import 'package:final_project/results/simpleLevellingResults.dart';
 import 'package:final_project/utils/download.dart';
 import 'package:final_project/utils/widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -20,6 +21,8 @@ class LevellingState extends State<Levelling> {
   bool dataPicked = false;
 
   String _fileName;
+
+  ScrollController controllerOne;
   void extractHeaders(String csvString) {
     try {
       setState(() {
@@ -85,41 +88,42 @@ class LevellingState extends State<Levelling> {
   }
 
   LevellingType radioValue = LevellingType.simple;
-  Widget dropDownButton({List<String> items, dynamic value}) {
-    return DropdownButtonFormField(
-      decoration: InputDecoration(border: OutlineInputBorder()),
-      value: value.toString(),
-      onChanged: (newValue) {
-        // TODO:
-        // check setstate for this
-        setState(() {
-          if (value == initMethod) initMethod = newValue;
-          //   if (value == benchmarkValue) benchmarkValue = newValue.toString();
-          //   if (value == backsightDropDownValue)
-          //     backsightDropDownValue = newValue.toString();
-          //   if (value == foresightDropDownValue)
-          //     foresightDropDownValue = newValue.toString();
-          //   if (value == intersightDropDownValue)
-          //     intersightDropDownValue = newValue.toString();
-          //   if (value == upperStadiaValue) upperStadiaValue = newValue.toString();
-          //   if (value == lowerStadiaValue) lowerStadiaValue = newValue.toString();
-          //   if (value == middleStadiaValue)
-          //     middleStadiaValue = newValue.toString();
-          //   if (value == digitalReadingValue)
-          //     digitalReadingValue = newValue.toString();
-        });
-      },
-      items: items.map((e) {
-        return DropdownMenuItem(
-          child: Text(
-            e.toString(),
-            overflow: textOverflow,
-          ),
-          value: e,
-        );
-      }).toList(),
-    );
-  }
+  // Widget dropDownButton(
+  //     {List<String> items, dynamic value, void Function(String) onChanged}) {
+  //   return DropdownButtonFormField(
+  //     decoration: InputDecoration(border: OutlineInputBorder()),
+  //     value: value.toString(),
+  //     onChanged: (newValue) {
+  //       // TODO:
+  //       // check setstate for this
+  //       setState(() {
+  //         if (value == initMethod) initMethod = newValue;
+  //         //   if (value == benchmarkValue) benchmarkValue = newValue.toString();
+  //         //   if (value == backsightDropDownValue)
+  //         //     backsightDropDownValue = newValue.toString();
+  //         //   if (value == foresightDropDownValue)
+  //         //     foresightDropDownValue = newValue.toString();
+  //         //   if (value == intersightDropDownValue)
+  //         //     intersightDropDownValue = newValue.toString();
+  //         //   if (value == upperStadiaValue) upperStadiaValue = newValue.toString();
+  //         //   if (value == lowerStadiaValue) lowerStadiaValue = newValue.toString();
+  //         //   if (value == middleStadiaValue)
+  //         //     middleStadiaValue = newValue.toString();
+  //         //   if (value == digitalReadingValue)
+  //         //     digitalReadingValue = newValue.toString();
+  //       });
+  //     },
+  //     items: items.map((e) {
+  //       return DropdownMenuItem(
+  //         child: Text(
+  //           e.toString(),
+  //           overflow: textOverflow,
+  //         ),
+  //         value: e,
+  //       );
+  //     }).toList(),
+  //   );
+  // }
 
   ScrollController firstController = ScrollController();
   ScrollController secondController = ScrollController();
@@ -139,6 +143,7 @@ class LevellingState extends State<Levelling> {
               flex: 1,
               fit: FlexFit.tight,
               child: SingleChildScrollView(
+                key: Key('config'),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -272,10 +277,17 @@ class LevellingState extends State<Levelling> {
                         padding: padding,
                         child: Container(
                             width: 300,
-                            child: dropDownButton(items: [
-                              'Rise or Fall',
-                              'Height of plane of collimation'
-                            ], value: initMethod)),
+                            child: dropDownButton(
+                                onChanged: (value) {
+                                  setState(() {
+                                    initMethod = value;
+                                  });
+                                },
+                                items: [
+                                  'Rise or Fall',
+                                  'Height of plane of collimation'
+                                ],
+                                value: initMethod)),
                       ),
                     if (dataPicked && radioValue == LevellingType.simple)
                       Padding(
@@ -291,6 +303,11 @@ class LevellingState extends State<Levelling> {
                         child: Container(
                             width: 300,
                             child: dropDownButton(
+                                onChanged: (value) {
+                                  setState(() {
+                                    initAccuracy = value;
+                                  });
+                                },
                                 items: ['2', '3', '5', '7'],
                                 value: initAccuracy)),
                       ),
@@ -308,7 +325,13 @@ class LevellingState extends State<Levelling> {
                         child: Container(
                             width: 300,
                             child: dropDownButton(
-                                items: headers, value: benchmarkValue)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    benchmarkValue = value;
+                                  });
+                                },
+                                items: headers,
+                                value: benchmarkValue)),
                       ),
                     if (dataPicked)
                       Padding(
@@ -324,7 +347,13 @@ class LevellingState extends State<Levelling> {
                         child: Container(
                             width: 300,
                             child: dropDownButton(
-                                items: headers, value: backsightDropDownValue)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    backsightDropDownValue = value;
+                                  });
+                                },
+                                items: headers,
+                                value: backsightDropDownValue)),
                       ),
                     if (dataPicked && radioValue == LevellingType.simple)
                       Padding(
@@ -340,6 +369,11 @@ class LevellingState extends State<Levelling> {
                         child: Container(
                             width: 300,
                             child: dropDownButton(
+                                onChanged: (value) {
+                                  setState(() {
+                                    intersightDropDownValue = value;
+                                  });
+                                },
                                 items: headers,
                                 value: intersightDropDownValue)),
                       ),
@@ -357,7 +391,13 @@ class LevellingState extends State<Levelling> {
                         child: Container(
                             width: 300,
                             child: dropDownButton(
-                                items: headers, value: foresightDropDownValue)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    foresightDropDownValue = value;
+                                  });
+                                },
+                                items: headers,
+                                value: foresightDropDownValue)),
                       ),
                     if (dataPicked && radioValue == LevellingType.precise)
                       Padding(
@@ -373,7 +413,13 @@ class LevellingState extends State<Levelling> {
                         child: Container(
                             width: 300,
                             child: dropDownButton(
-                                items: headers, value: upperStadiaValue)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    upperStadiaValue = value;
+                                  });
+                                },
+                                items: headers,
+                                value: upperStadiaValue)),
                       ),
                     if (dataPicked && radioValue == LevellingType.precise)
                       Padding(
@@ -389,7 +435,13 @@ class LevellingState extends State<Levelling> {
                         child: Container(
                             width: 300,
                             child: dropDownButton(
-                                items: headers, value: middleStadiaValue)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    middleStadiaValue = value;
+                                  });
+                                },
+                                items: headers,
+                                value: middleStadiaValue)),
                       ),
                     if (dataPicked && radioValue == LevellingType.precise)
                       Padding(
@@ -405,7 +457,13 @@ class LevellingState extends State<Levelling> {
                         child: Container(
                             width: 300,
                             child: dropDownButton(
-                                items: headers, value: lowerStadiaValue)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    lowerStadiaValue = value;
+                                  });
+                                },
+                                items: headers,
+                                value: lowerStadiaValue)),
                       ),
                     if (dataPicked && radioValue == LevellingType.precise)
                       Padding(
@@ -421,7 +479,13 @@ class LevellingState extends State<Levelling> {
                         child: Container(
                             width: 300,
                             child: dropDownButton(
-                                items: headers, value: digitalReadingValue)),
+                                onChanged: (value) {
+                                  setState(() {
+                                    digitalReadingValue = value;
+                                  });
+                                },
+                                items: headers,
+                                value: digitalReadingValue)),
                       ),
                     if (dataPicked)
                       Padding(
@@ -435,6 +499,7 @@ class LevellingState extends State<Levelling> {
                                     'foresightValue': foresightDropDownValue,
                                     'intersightValue': intersightDropDownValue,
                                     'benchmarkValue': benchmarkValue,
+                                    'k': initAccuracy
                                   };
 
                                   var compute = simpleLevelling(
@@ -476,100 +541,99 @@ class LevellingState extends State<Levelling> {
             if (dataPicked == true)
               Flexible(
                   flex: 2,
-                  child: Scrollbar(
-                    isAlwaysShown: true,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        if (computationsDone)
-                          TextButton(
-                              child: Text('Download'),
-                              onPressed: () {
-                                var result =
-                                    ListToCsvConverter().convert(results);
-                                // var errorReport = results
-                                var data = addFilesToZip(csvFile: {
-                                  'data': result,
-                                  'filename': 'processed data.csv',
-                                }, reportFile: {
-                                  'data': 'Processing Report\r\n'
-                                          'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n\r\n'
-                                          'Benchmarks identified\r\n'
-                                          '${errorReport['Benchmarks identified']}\r\n\r\n'
-                                          'Total number of instrument setup: ${errorReport['Total number of instrument setup']}\r\n\r\n'
-                                          'Arithmetic Check\r\n'
-                                          'Sum of backsight = ${errorReport['Sum of backsight']}\r\n'
-                                          'Sum of foresight = ${errorReport['Sum of foresight']}\r\n' +
-                                      (errorReport.containsValue('Rise or Fall')
-                                          ? 'Sum of rise = ${errorReport['sum of rise']}\r\nSum of fall = '
-                                              '${errorReport['sum of fall']}\r\nΣBS + ΣFS - ΣRise - ΣFall = ${errorReport['check']}\r\n'
-                                          : '') +
-                                      'Arithmetically ${errorReport['Arithmetic check']}\r\n\r\n'
-                                          'Method of computation: ${errorReport['Method of computation']}\r\n'
-                                          'Accuracy factor, k: ${errorReport['Accuracy factor k']}\r\n'
-                                          'Acceptable Misclosure: ${errorReport['Acceptable Misclosure']}\r\n'
-                                          'Project Misclosure: ${errorReport['Project Misclosue']}\r\n'
-                                          '${errorReport['Project condition']}\r\n\r\n'
-                                          'Summary of misclosure\r\n'
-                                          'Benchmark\t\tTrue value\t\tComputed value\tError\r\n'
-                                          '${errorReport['Summary']}',
-                                  'filename': 'processing report.txt'
-                                });
-                                download(data,
-                                    downloadName:
-                                        '${_fileName.split(".")[0]} result.zip');
-                              }),
-                        if (computationsDone)
-                          TextButton(
-                            child: Text('Plot'),
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      if (computationsDone)
+                        TextButton(
+                            child: Text('Download'),
                             onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => SimpleLevellingResults(
-                                      title: _fileName,
-                                      remarks: results.sublist(1).map((e) {
-                                        return e[8].toString();
-                                      }).toList(),
-                                      elevation: results.sublist(1).map((e) {
-                                        return num.parse(e[7].toString());
-                                      }).toList())));
-                            },
-                          ),
-                        Padding(
-                          padding: padding,
-                          child: SingleChildScrollView(
-                            child: DataTable(
-                                columns: computationsDone
-                                    ? dataHeadings.map((e) {
-                                        return DataColumn(
-                                            label: Text(e.toString(),
-                                                style: headerStyle));
-                                      }).toList()
-                                    : headers.map((e) {
-                                        return DataColumn(
-                                            label: Text(e.toString(),
-                                                style: headerStyle));
-                                      }).toList(),
-                                rows: computationsDone
-                                    ? results.sublist(1).map((e) {
-                                        return DataRow(
-                                            cells: e.map((e) {
-                                          return DataCell(Text(e.toString(),
-                                              style: rowStyle));
-                                        }).toList());
-                                      }).toList()
-                                    : levelData.sublist(1).map((e) {
-                                        return DataRow(
-                                            cells: e
-                                                .map((e) => DataCell(Text(
-                                                      e.toString(),
-                                                      style: rowStyle,
-                                                    )))
-                                                .toList());
-                                      }).toList()),
-                          ),
+                              var result =
+                                  ListToCsvConverter().convert(results);
+                              // var errorReport = results
+                              var data = addFilesToZip(csvFile: {
+                                'data': result,
+                                'filename': 'processed data.csv',
+                              }, reportFile: {
+                                'data': 'Processing Report\r\n'
+                                        'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n\r\n'
+                                        'Benchmarks identified\r\n'
+                                        '${errorReport['Benchmarks identified']}\r\n\r\n'
+                                        'Total number of instrument setup: ${errorReport['Total number of instrument setup']}\r\n\r\n'
+                                        'Arithmetic Check\r\n'
+                                        'Sum of backsight = ${errorReport['Sum of backsight']}\r\n'
+                                        'Sum of foresight = ${errorReport['Sum of foresight']}\r\n' +
+                                    (errorReport.containsValue('Rise or Fall')
+                                        ? 'Sum of rise = ${errorReport['sum of rise']}\r\nSum of fall = '
+                                            '${errorReport['sum of fall']}\r\nΣBS + ΣFS - ΣRise - ΣFall = ${errorReport['check']}\r\n'
+                                        : 'Sum of intersight: ${errorReport['sum intersight']} \r\n'
+                                            'Sum of RLs except first: ${errorReport['sum rl']} \r\n'
+                                            'Sum (each HPC * number of applications): ${errorReport['hpc*application']}\r\n') +
+                                    'Arithmetically ${errorReport['Arithmetic check']}\r\n\r\n'
+                                        'Method of computation: ${errorReport['Method of computation']}\r\n'
+                                        'Accuracy factor, k: ${errorReport['Accuracy factor k']}\r\n'
+                                        'Acceptable Misclosure: ${errorReport['Acceptable Misclosure']}mm \r\n'
+                                        'Project Misclosure: ${errorReport['Project Misclosue']}\r\n\r\n'
+                                        'Summary of misclosure\r\n'
+                                        'Benchmark\t\tTrue value\t\tComputed value\tError\r\n'
+                                        '${errorReport['Summary']}',
+                                'filename': 'processing report.txt'
+                              });
+                              download(data,
+                                  downloadName:
+                                      '${_fileName.split(".")[0]} result.zip');
+                            }),
+                      if (computationsDone)
+                        TextButton(
+                          child: Text('Plot'),
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => SimpleLevellingResults(
+                                    title: _fileName,
+                                    remarks: results.sublist(1).map((e) {
+                                      return e[8].toString();
+                                    }).toList(),
+                                    elevation: results.sublist(1).map((e) {
+                                      return num.parse(e[7].toString());
+                                    }).toList())));
+                          },
                         ),
-                      ],
-                    ),
+                      Padding(
+                        padding: padding,
+                        child: SingleChildScrollView(
+                          key: Key('data'),
+                          child: DataTable(
+                              columns: computationsDone
+                                  ? dataHeadings.map((e) {
+                                      return DataColumn(
+                                          label: Text(e.toString(),
+                                              style: headerStyle));
+                                    }).toList()
+                                  : headers.map((e) {
+                                      return DataColumn(
+                                          label: Text(e.toString(),
+                                              style: headerStyle));
+                                    }).toList(),
+                              rows: computationsDone
+                                  ? results.sublist(1).map((e) {
+                                      return DataRow(
+                                          cells: e.map((e) {
+                                        return DataCell(Text(e.toString(),
+                                            style: rowStyle));
+                                      }).toList());
+                                    }).toList()
+                                  : levelData.sublist(1).map((e) {
+                                      return DataRow(
+                                          cells: e
+                                              .map((e) => DataCell(Text(
+                                                    e.toString(),
+                                                    style: rowStyle,
+                                                  )))
+                                              .toList());
+                                    }).toList()),
+                        ),
+                      ),
+                    ],
                   ))
           ],
         ),
