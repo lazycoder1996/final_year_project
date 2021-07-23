@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:final_project/computations/traversing/travFunctions.dart';
+
 simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
     String initAccuracy) {
   List<List<dynamic>> processedData = rawData;
@@ -7,14 +9,14 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
   var benchmark = [];
   var interSight = [];
   var foreSight = [];
-  int k = 2;
   var initialReducedLevels = <num>[];
   int size;
   var heightDifferences = <num>[0];
   var dataHeadings = <String>[];
-  var adj = <double>[0.0];
+  var adj = <dynamic>[0.0];
   var error;
   var newBackSight = [];
+  var newIntersight = [];
   String arithmeticCheck = 'correct';
   num allowableMisclose = 0;
   // ignore: unused_local_variable
@@ -25,10 +27,14 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
   num sumOfBs = 0;
   num sumOfRise = 0;
   num sumOfFall = 0;
+  num sumOfIs = 0;
+  num sumRl = 0;
   num sumOfFs = 0;
+  num hpcTimesApplication = 0;
   num sumOfHeights = 0;
   num diffBtnBsAndFs = 0;
   num diffFirstRlAndLastRl = 0;
+  num k = double.parse(initialValues['k']);
   // ignore: omit_local_variable_types
   List<dynamic> rise = [''];
   // ignore: omit_local_variable_types
@@ -49,6 +55,8 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
   num b;
   var timesDownloaded = 0;
   var fileNames = [];
+  List timesHPCused = [];
+
   var selectedComputation = initMethod;
   dynamic initialBmValue;
   dynamic finalBmValue;
@@ -76,6 +84,16 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
   num h;
   var n = 0;
   num reducedLevel;
+  int count(var count, List countIn) {
+    int times = 0;
+    for (var i in countIn) {
+      if (i == count) {
+        times++;
+      }
+    }
+    return times;
+  }
+
   // Calculating rise or fall
   if (initMethod == 'Rise or Fall') {
     selectedComputation = 'Rise and Fall';
@@ -158,6 +176,19 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
     } catch (e) {
       print(e.toString());
     }
+    print('hpc is $heightCollimation');
+    // for (var i in heightCollimation) {
+    //   timesHPCused.add(count(i, heightCollimation));
+    // }
+    n = 0;
+    try {
+      while (n <= heightCollimation.length) {
+        int a = count(heightCollimation[n], heightCollimation);
+        timesHPCused.add(a);
+        n += a;
+      }
+    } catch (e) {}
+    print('times hpc used $timesHPCused');
   }
   newBackSight = backSight;
   try {
@@ -229,6 +260,7 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
     }
     print('frl is $finalReducedLevels');
   }
+  adj[0] = '';
   // Arithmetic check
   try {
     // removing empty strings in foresights and backsights
@@ -257,6 +289,20 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
       print('sum of BS: $sumOfBs');
     }
 
+    // summing intersights
+    try {
+      int x;
+      x = 0;
+      while (x <= size) {
+        if (interSight[x] != '') {
+          sumOfIs = sumOfIs + interSight[x];
+        }
+        x++;
+      }
+    } catch (e) {} finally {
+      print('sum of IS: $sumOfIs');
+    }
+
     //Summing foresights
     try {
       var a = 0;
@@ -282,6 +328,7 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
         print('sum of Rises: $sumOfHeights');
       }
     }
+    sumRl = sumItems(initialReducedLevels.sublist(1));
 
     sumOfFs = double.parse(sumOfFs.toStringAsFixed(3));
     diffBtnBsAndFs = sumOfBs - sumOfFs;
@@ -299,7 +346,7 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
     try {
       k = int.parse(initAccuracy.toString());
       allowableMisclose =
-          double.parse((k * math.sqrt(nonZeroBs)).toStringAsFixed(3));
+          double.parse(((k * math.sqrt(nonZeroBs)) / 1000).toStringAsFixed(5));
       if (num.tryParse(benchmark.last.toString()) != null) {
         if (error.abs() <= allowableMisclose) {
           condition = '';
@@ -335,32 +382,44 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
   print('fall data: $fall');
 
   // Removing duplicates in HPC
-  try {
-    n = 1;
-    var x = 0;
-    while (n <= size) {
-      if (heightCollimation[x] == heightCollimation[n]) {
-        heightCollimation[n] = '';
-      } else {
-        x = n;
+  if (initMethod != 'Rise or Fall') {
+    try {
+      n = 1;
+      var x = 0;
+      while (n <= size) {
+        if (heightCollimation[x] == heightCollimation[n]) {
+          heightCollimation[n] = '';
+        } else {
+          x = n;
+        }
+        n++;
       }
-      n++;
+    } catch (e) {}
+    n = 0;
+    timesHPCused[timesHPCused.length - 1] = timesHPCused.last - 1;
+    for (var i in heightCollimation) {
+      if (i != '') {
+        hpcTimesApplication += i * timesHPCused[n];
+        n++;
+      }
     }
-  } catch (e) {}
+  }
 
   //Summing rises and falls
-  try {
-    n = 0;
-    while (n <= size) {
-      if (rise[n] != '') {
-        sumOfRise += rise[n];
+  if (initMethod == 'Rise or Fall') {
+    try {
+      n = 0;
+      while (n <= size) {
+        if (rise[n] != '') {
+          sumOfRise += rise[n];
+        }
+        if (fall[n] != '') {
+          sumOfFall += fall[n];
+        }
+        n++;
       }
-      if (fall[n] != '') {
-        sumOfFall += fall[n];
-      }
-      n++;
-    }
-  } catch (e) {}
+    } catch (e) {}
+  }
 
   var m = 0;
 
@@ -523,11 +582,14 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
       'Acceptable Misclosure': allowableMisclose,
       'sum of rise': sumOfRise,
       'sum of fall': sumOfFall,
-      'check': (diffBtnBsAndFs - sumOfHeights).roundToDouble().toInt(),
+      'is+fs+rl': (sumOfIs + sumOfFs + sumRl).toStringAsFixed(5),
+      'sum intersight': sumOfIs.toStringAsFixed(5),
+      'sum rl': sumRl.toStringAsFixed(5),
+      'hpc*application': hpcTimesApplication.toStringAsFixed(5),
+      'check': initMethod == 'Rise or Fall'
+          ? (diffBtnBsAndFs - sumOfHeights).roundToDouble().toInt()
+          : (sumOfIs + sumOfFs + sumRl - hpcTimesApplication).roundToDouble(),
       'Project Misclosue': error,
-      'Project condition': 'Since PM ' +
-          (misclose == 'accepted' ? '<' : '>') +
-          ' AM, the error associated with this project is $misclose',
       'Summary': misclosureSummary
     }
   ];
