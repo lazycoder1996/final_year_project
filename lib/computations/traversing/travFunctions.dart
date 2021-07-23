@@ -474,7 +474,7 @@ num backBearing(num foreBearing) {
 }
 
 num sumItems(list) {
-  num sum;
+  num sum = 0;
   for (var i in list) {
     sum += i;
   }
