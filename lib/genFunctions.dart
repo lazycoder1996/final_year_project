@@ -144,23 +144,23 @@ TextStyle titleStyle = TextStyle(
     fontFamily: 'Akaya');
 TextStyle configurationStyle = TextStyle(fontSize: 18, fontFamily: 'Berkshire');
 TextStyle inputStyle = TextStyle(fontSize: 22, fontFamily: 'Akaya');
-Widget dropDownButton(
-    {List<String> items,
-    InputDecoration decoration,
-    String value,
-    void Function(String) onChanged}) {
-  return DropdownButtonFormField(
-    decoration: decoration ?? InputDecoration(border: OutlineInputBorder()),
-    items: items
-        .map((e) => DropdownMenuItem(
-              child: Text(e.toString()),
-              value: e,
-            ))
-        .toList(),
-    value: value,
-    onChanged: onChanged,
-  );
-}
+// Widget dropDownButton(
+//     {List<String> items,
+//     InputDecoration decoration,
+//     String value,
+//     void Function(String) onChanged}) {
+//   return DropdownButtonFormField(
+//     decoration: decoration ?? InputDecoration(border: OutlineInputBorder()),
+//     items: items
+//         .map((e) => DropdownMenuItem(
+//               child: Text(e.toString()),
+//               value: e,
+//             ))
+//         .toList(),
+//     value: value,
+//     onChanged: onChanged,
+//   );
+// }
 
 // String degreesToDms(num myNumber) {
 //   String sign;
