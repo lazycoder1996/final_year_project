@@ -29,20 +29,6 @@ class _TraversingState extends State<Traversing> {
   List<List<dynamic>> traverseData = [];
   List<String> dataHeaders = [];
   bool changeBody = false;
-  Widget dropDownButton(
-      {List<String> items, String value, void Function(String) onChanged}) {
-    return DropdownButtonFormField(
-      decoration: InputDecoration(border: OutlineInputBorder()),
-      items: items
-          .map((e) => DropdownMenuItem(
-                child: Text(e.toString()),
-                value: e,
-              ))
-          .toList(),
-      value: value,
-      onChanged: onChanged,
-    );
-  }
 
   void putDropdownValues(List<dynamic> headers) {
     backsightDropdown = headers[0].toString();
