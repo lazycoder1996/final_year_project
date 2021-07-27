@@ -4,6 +4,7 @@ loopTraverse(
     {String adjustBy,
     List<List<dynamic>> traverseData,
     Map<String, dynamic> rawValues}) {
+  DateTime startTime = DateTime.now();
   var dataSize = traverseData.length;
   var backsightData = rawValues['backsight'];
   var foresightData = rawValues['foresight'];
@@ -131,10 +132,13 @@ loopTraverse(
       n++;
     }
   } catch (e) {}
-  // print('end');
+  DateTime endTime = DateTime.now();
+  DateTime duration = DateTime.fromMillisecondsSinceEpoch(
+      endTime.millisecondsSinceEpoch - startTime.millisecondsSinceEpoch);
   return [
     output,
     {
+      'duration': Duration(milliseconds: duration.millisecond).inMilliseconds,
       'departure': departure.join("\r\n"),
       'closure': closure.join('\r\n'),
       'setup': includedAngles.length,

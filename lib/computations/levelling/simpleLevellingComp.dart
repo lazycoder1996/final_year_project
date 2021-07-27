@@ -4,6 +4,7 @@ import 'package:final_project/computations/traversing/travFunctions.dart';
 
 simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
     String initAccuracy) {
+  DateTime startTime = DateTime.now();
   List<List<dynamic>> processedData = rawData;
   var backSight = [];
   var benchmark = [];
@@ -569,9 +570,15 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
   }
 
   String misclosureSummary = summary.join("\r\n");
+  DateTime endTime = DateTime.now();
+  DateTime duration = DateTime.fromMillisecondsSinceEpoch(
+      endTime.millisecondsSinceEpoch - startTime.millisecondsSinceEpoch);
   return [
     processedData,
     {
+      'duration': Duration(
+        milliseconds: duration.millisecond,
+      ).inMilliseconds,
       'Benchmarks identified': benchmarksIdentified,
       'Total number of instrument setup': backSight.length,
       'Sum of backsight': sumOfBs,

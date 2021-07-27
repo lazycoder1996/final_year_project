@@ -556,7 +556,8 @@ class LevellingState extends State<Levelling> {
                                 'filename': 'processed data.csv',
                               }, reportFile: {
                                 'data': 'Processing Report\r\n'
-                                        'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n\r\n'
+                                        'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n'
+                                        'Duration: ${errorReport['duration']} ms\r\n\r\n'
                                         'Benchmarks identified\r\n'
                                         '${errorReport['Benchmarks identified']}\r\n\r\n'
                                         'Total number of instrument setup: ${errorReport['Total number of instrument setup']}\r\n\r\n'

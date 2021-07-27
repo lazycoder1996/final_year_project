@@ -31,12 +31,14 @@ class _TraversingState extends State<Traversing> {
   bool changeBody = false;
 
   void putDropdownValues(List<dynamic> headers) {
-    backsightDropdown = headers[0].toString();
-    stationDropdown = headers[1].toString();
-    foresightDropdown = headers[2].toString();
-    circleReadingsDropdown = headers[4].toString();
-    distanceDropdown = headers[5].toString();
-    controlDropdown = headers[6].toString();
+    try {
+      backsightDropdown = headers[0].toString();
+      stationDropdown = headers[1].toString();
+      foresightDropdown = headers[2].toString();
+      circleReadingsDropdown = headers[4].toString();
+      distanceDropdown = headers[5].toString();
+      controlDropdown = headers[6].toString();
+    } catch (e) {}
   }
 
   List<dynamic> backsightData = [];
@@ -437,7 +439,8 @@ class _TraversingState extends State<Traversing> {
                                       reportFile: {
                                         'filename': 'processing report.txt',
                                         'data': 'Processing Report\r\n'
-                                                'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n\r\n'
+                                                'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n'
+                                                'Duration: ${errorReport['duration']} ms\r\n\r\n'
                                                 'Points of depature\r\n'
                                                 '${errorReport['departure']}\r\n'
                                                 'Points of closure\r\n'
@@ -452,7 +455,7 @@ class _TraversingState extends State<Traversing> {
                                                     'Closed Loop'
                                                 ? 'Expected final bearing :${errorReport['expected final bearing']}\r\n'
                                                 : 'Expected sum of included angles: ${errorReport['expected sum angles']}\r\n') +
-                                            'Error: ${errorReport['error']}\r\n\r\n' +
+                                            'Error: ${errorReport['error']}\r\n' +
                                             (typeOfTraverseDropdown ==
                                                     'Closed Loop'
                                                 ? ''
