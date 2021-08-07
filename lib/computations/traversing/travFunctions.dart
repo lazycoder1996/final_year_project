@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:final_project/genFunctions.dart';
+
 // // reading file
 // List<List<dynamic>> readFile(String filePath) {
 //   try {
@@ -123,20 +125,6 @@ adjustIncludedAnglesLink(
     'results': adjustment,
     'error': [sumAngles, expectedSum, error, adjPerStation]
   };
-}
-
-num minimum(List numbers) {
-  num result = numbers[0];
-  num n = 1;
-  try {
-    while (n <= numbers.length) {
-      if (numbers[n] <= result) {
-        result = numbers[n];
-      }
-      n++;
-    }
-  } catch (e) {}
-  return result;
 }
 
 // adjust included angles

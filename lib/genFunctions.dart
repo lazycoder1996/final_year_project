@@ -1,6 +1,130 @@
 import 'package:csv/csv.dart';
 import 'package:file_access/file_access.dart';
+import 'package:final_project/utils/download.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+num minimum(List numbers) {
+  num result = numbers[0];
+  num n = 1;
+  try {
+    while (n <= numbers.length) {
+      if (numbers[n] <= result) {
+        result = numbers[n];
+      }
+      n++;
+    }
+  } catch (e) {}
+  return result;
+}
+
+num maximum(List numbers) {
+  num result = numbers[1];
+  num n = 1;
+  try {
+    while (n <= numbers.length) {
+      if (numbers[n] >= result) {
+        result = numbers[n];
+      }
+      n++;
+    }
+  } catch (e) {}
+  return result;
+}
+
+List<Offset> offsets(List<List<num>> coordinates, double height, double width) {
+  List<Offset> offsets = [];
+  for (var i in coordinates) {
+    offsets.add(Offset(i[0] * width, i[1] * height));
+  }
+  return offsets;
+}
+
+Widget previewData({List<String> columns, List<List<dynamic>> rows}) {
+  return Scrollbar(
+    child: DataTable(
+        columns: columns.map((e) {
+          return DataColumn(label: Text(e.toString(), style: headerStyle));
+        }).toList(),
+        rows: rows.map((e) {
+          return DataRow(
+              cells: e.map((e) {
+            return DataCell(Text(e.toString(), style: rowStyle));
+          }).toList());
+        }).toList()),
+  );
+}
+
+Widget doneProcessing(BuildContext context,
+    {List<List<dynamic>> results,
+    Map<dynamic, dynamic> errorReport,
+    Map<dynamic, dynamic> reportFile,
+    Map<dynamic, dynamic> previewMapData,
+    String fileName}) {
+  return AlertDialog(
+    title: Text('Results are ready!'),
+    actions: [
+      TextButton(
+        child: Text('Preview'),
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return Scaffold(
+              body: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  Expanded(
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: [
+                        SingleChildScrollView(
+                          child: Container(
+                            child: previewData(
+                                rows: previewMapData['rows'],
+                                columns: previewMapData['columns']),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }));
+        },
+      ),
+      TextButton(
+          child: Text('Download'),
+          onPressed: () {
+            var result = ListToCsvConverter().convert(results);
+            // var errorReport = results
+            var data = addFilesToZip(csvFile: {
+              'data': result,
+              'filename': 'processed data.csv',
+            }, reportFile: reportFile);
+            download(data,
+                downloadName: '${fileName.split(".")[0]} result.zip');
+            Navigator.of(context).pop(false);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              duration: Duration(seconds: 4),
+              content: Container(
+                child: Text(
+                    '${fileName.split(".")[0]} result.zip downloaded successfully'),
+              ),
+            ));
+          }),
+      TextButton(
+          child: Text('Cancel'),
+          onPressed: () => Navigator.of(context).pop(false)),
+    ],
+  );
+}
 
 // List forwardGeodetic(
 //     num eastingsOne, num northingsOne, num eastingsTwo, num northingsTwo) {

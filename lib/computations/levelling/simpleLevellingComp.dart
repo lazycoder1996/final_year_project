@@ -597,7 +597,10 @@ simpleLevelling(List<List<dynamic>> rawData, initialValues, String initMethod,
           ? (diffBtnBsAndFs - sumOfHeights).roundToDouble().toInt()
           : (sumOfIs + sumOfFs + sumRl - hpcTimesApplication).roundToDouble(),
       'Project Misclosue': error,
-      'Summary': misclosureSummary
+      'true final IRL': benchmark.last,
+      'comp final IRL': initialReducedLevels.last,
+      'last bm': remarks.last,
+      // 'Summary': misclosureSummary
     }
   ];
 }

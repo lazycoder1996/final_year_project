@@ -30,6 +30,7 @@ dependencies:
   syncfusion_flutter_charts: ^19.2.44+1
   intl: ^0.17.0
   responsive_framework: ^0.1.4
+  flutter_plot: ^0.1.0
   flutter:
     sdk: flutter
 

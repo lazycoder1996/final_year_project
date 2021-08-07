@@ -1,7 +1,9 @@
+import 'dart:math';
 import 'package:csv/csv.dart';
 import 'package:final_project/computations/traversing/linkTraverseComp.dart';
 import 'package:final_project/computations/traversing/loopTraverseComp.dart';
 import 'package:final_project/genFunctions.dart';
+import 'package:final_project/screens/testing.dart';
 import 'package:final_project/utils/download.dart';
 import 'package:final_project/utils/widgets.dart';
 import 'package:flutter/material.dart';
@@ -480,6 +482,20 @@ class _TraversingState extends State<Traversing> {
                                     downloadName:
                                         '${_fileName.split(".")[0]} result.zip');
                               });
+                              List<Point> points = [];
+                              try {
+                                for (int i = 0; i <= res.length; i++) {
+                                  var coord = errorReport['coordinates'];
+                                  var maxE = maximum(coord[0]);
+                                  var maxY = maximum(coord[1]);
+                                  points.add(Point(((coord[0][i]) / maxE) * 10,
+                                      ((coord[1][i]) / maxY) * 10));
+                                }
+                              } catch (e) {}
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Polygon(
+                                      points: points,
+                                      type: typeOfTraverseDropdown)));
                             }))
                     ],
                   ),

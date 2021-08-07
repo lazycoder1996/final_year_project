@@ -182,6 +182,7 @@ linkTraverse(
       'closure': closure.join('\r\n'),
       'setup': includedAngles.length,
       'adj By': adjustBy,
+      'coordinates': finalCoordinates,
       'observed sum angles':
           adjustedIncludedAngles['error'][0].toStringAsFixed(6),
       'expected sum angles':

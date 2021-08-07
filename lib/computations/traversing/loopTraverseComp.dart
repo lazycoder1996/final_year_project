@@ -139,6 +139,7 @@ loopTraverse(
     output,
     {
       'duration': Duration(milliseconds: duration.millisecond).inMilliseconds,
+      'coordinates': finalCoordinates,
       'departure': departure.join("\r\n"),
       'closure': closure.join('\r\n'),
       'setup': includedAngles.length,

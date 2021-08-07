@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:final_project/screens/testing.dart';
 import 'package:final_project/tools_ui/levellingInterface.dart';
 import 'package:final_project/tools_ui/traversingInterface.dart';
 import 'package:final_project/utils/widgets.dart';
@@ -126,6 +129,12 @@ class _HomePageState extends State<HomePage> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => Traversing()));
                           }),
+                      itemCard(
+                          title: 'Testing',
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Polygon()));
+                          })
                     ],
                   ),
                 ),
