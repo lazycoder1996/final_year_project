@@ -64,64 +64,78 @@ Widget doneProcessing(BuildContext context,
   return AlertDialog(
     title: Text('Results are ready!'),
     actions: [
-      TextButton(
-        child: Text('Preview'),
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return Scaffold(
-              body: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  Expanded(
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        SingleChildScrollView(
-                          child: Container(
-                            child: previewData(
-                                rows: previewMapData['rows'],
-                                columns: previewMapData['columns']),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }));
-        },
-      ),
-      TextButton(
-          child: Text('Download'),
+      Tooltip(
+        message: 'Preview results',
+        waitDuration: Duration(milliseconds: 500),
+        child: IconButton(
+          icon: Icon(Icons.preview),
           onPressed: () {
-            var result = ListToCsvConverter().convert(results);
-            // var errorReport = results
-            var data = addFilesToZip(csvFile: {
-              'data': result,
-              'filename': 'processed data.csv',
-            }, reportFile: reportFile);
-            download(data,
-                downloadName: '${fileName.split(".")[0]} result.zip');
-            Navigator.of(context).pop(false);
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              duration: Duration(seconds: 4),
-              content: Container(
-                child: Text(
-                    '${fileName.split(".")[0]} result.zip downloaded successfully'),
-              ),
-            ));
-          }),
-      TextButton(
-          child: Text('Cancel'),
-          onPressed: () => Navigator.of(context).pop(false)),
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return Scaffold(
+                body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    Expanded(
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          SingleChildScrollView(
+                            child: Container(
+                              child: previewData(
+                                  rows: previewMapData['rows'],
+                                  columns: previewMapData['columns']),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }));
+          },
+        ),
+      ),
+      Tooltip(
+        message: 'Download results',
+        waitDuration: Duration(milliseconds: 500),
+        child: IconButton(
+            icon: Icon(Icons.file_download, color: Colors.green),
+            onPressed: () {
+              var result = ListToCsvConverter().convert(results);
+              // var errorReport = results
+              var data = addFilesToZip(csvFile: {
+                'data': result,
+                'filename': 'processed data.csv',
+              }, reportFile: reportFile);
+              download(data,
+                  downloadName: '${fileName.split(".")[0]} result.zip');
+              Navigator.of(context).pop(false);
+              // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              //   duration: Duration(seconds: 4),
+              //   content: Container(
+              //     child: Text(
+              //         '${fileName.split(".")[0]} result.zip downloaded successfully'),
+              //   ),
+              // ));
+            }),
+      ),
+      Tooltip(
+        message: 'Cancel',
+        waitDuration: Duration(milliseconds: 500),
+        child: IconButton(
+            icon: Icon(
+              Icons.cancel,
+              color: Colors.red,
+            ),
+            onPressed: () => Navigator.of(context).pop(false)),
+      ),
     ],
   );
 }
