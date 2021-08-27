@@ -60,14 +60,14 @@ class LevellingState extends State<Levelling> {
   List<List<dynamic>> levelData = [];
   List<List<dynamic>> rawData = [];
 
-  List<List<dynamic>> results = [];
+  dynamic results = [];
   Map errorReport = {};
 
   String initMethod = 'Rise or Fall';
   String selectedComputation = 'Rise and Fall';
   String initAccuracy = '3';
   bool computationsDone = false;
-  List dataHeadings = [];
+  List<String> dataHeadings = [];
 
   List<dynamic> headers = [];
 
@@ -489,7 +489,7 @@ class LevellingState extends State<Levelling> {
                                     ),
                                   ),
                                 ));
-                        Future.delayed(Duration(milliseconds: 200))
+                        Future.delayed(Duration(milliseconds: 250))
                             .then((value) {
                           Navigator.of(context).pop(false);
                           showDialog(
@@ -503,31 +503,43 @@ class LevellingState extends State<Levelling> {
                                     'rows': results.sublist(1)
                                   },
                                   fileName: _fileName,
-                                  reportFile: {
-                                    'data': 'Processing Report\r\n'
-                                            'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n'
-                                            'Duration: ${errorReport['duration']} ms\r\n\r\n'
-                                            'Benchmarks identified\r\n'
-                                            '${errorReport['Benchmarks identified']}\r\n\r\n'
-                                            'Total number of instrument setup: ${errorReport['Total number of instrument setup']}\r\n\r\n'
-                                            'Arithmetic Check\r\n'
-                                            'Sum of backsight = ${errorReport['Sum of backsight']}\r\n'
-                                            'Sum of foresight = ${errorReport['Sum of foresight']}\r\n' +
-                                        (errorReport
-                                                .containsValue('Rise or Fall')
-                                            ? 'Sum of rise = ${errorReport['sum of rise']}\r\nSum of fall = '
-                                                '${errorReport['sum of fall']}\r\nΣBS + ΣFS - ΣRise - ΣFall = ${errorReport['check']}\r\n'
-                                            : 'Sum of intersight: ${errorReport['sum intersight']} \r\n'
-                                                'Sum of RLs except first: ${errorReport['sum rl']} \r\n'
-                                                'Sum (each HPC * number of applications): ${errorReport['hpc*application']}\r\n') +
-                                        'Arithmetically ${errorReport['Arithmetic check']}\r\n\r\n'
-                                            'Method of computation: ${errorReport['Method of computation']}\r\n'
-                                            'Accuracy factor, k: ${errorReport['Accuracy factor k']}\r\n'
-                                            'Acceptable Misclosure: ${errorReport['Acceptable Misclosure']}mm \r\n\r\n'
-                                            'Project misclosure at ${errorReport['last bm']}: ${errorReport['true final IRL']} - '
-                                            '${errorReport['comp final IRL']} = ${errorReport['Project Misclosue']}',
-                                    'filename': 'processing report.txt'
-                                  }));
+                                  reportFile: radioValue ==
+                                          LevellingType.precise
+                                      ? {
+                                          'filename': 'processing report.txt',
+                                          'data': 'Processing Report\r\n'
+                                              'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n'
+                                              'Duration: ${errorReport['duration']} ms\r\n\r\n'
+                                              'Benchmarks identified\r\n'
+                                              '${errorReport['Benchmarks identified']}\r\n\r\n'
+                                              'Project misclosure at ${errorReport['last bm']}: ${errorReport['comp final IRL']} - '
+                                              '${errorReport['true final IRL']} = ${errorReport['Project Misclosue']}',
+                                        }
+                                      : {
+                                          'data': 'Processing Report\r\n'
+                                                  'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n'
+                                                  'Duration: ${errorReport['duration']} ms\r\n\r\n'
+                                                  'Benchmarks identified\r\n'
+                                                  '${errorReport['Benchmarks identified']}\r\n\r\n'
+                                                  'Total number of instrument setup: ${errorReport['Total number of instrument setup']}\r\n\r\n'
+                                                  'Arithmetic Check\r\n'
+                                                  'Sum of backsight = ${errorReport['Sum of backsight']}\r\n'
+                                                  'Sum of foresight = ${errorReport['Sum of foresight']}\r\n' +
+                                              (errorReport.containsValue(
+                                                      'Rise or Fall')
+                                                  ? 'Sum of rise = ${errorReport['sum of rise']}\r\nSum of fall = '
+                                                      '${errorReport['sum of fall']}\r\nΣBS + ΣFS - ΣRise - ΣFall = ${errorReport['check']}\r\n'
+                                                  : 'Sum of intersight: ${errorReport['sum intersight']} \r\n'
+                                                      'Sum of RLs except first: ${errorReport['sum rl']} \r\n'
+                                                      'Sum (each HPC * number of applications): ${errorReport['hpc*application']}\r\n') +
+                                              'Arithmetically ${errorReport['Arithmetic check']}\r\n\r\n'
+                                                  'Method of computation: ${errorReport['Method of computation']}\r\n'
+                                                  'Accuracy factor, k: ${errorReport['Accuracy factor k']}\r\n'
+                                                  'Acceptable Misclosure: ${errorReport['Acceptable Misclosure']}mm \r\n\r\n'
+                                                  'Project misclosure at ${errorReport['last bm']}: ${errorReport['true final IRL']} - '
+                                                  '${errorReport['comp final IRL']} = ${errorReport['Project Misclosue']}',
+                                          'filename': 'processing report.txt'
+                                        }));
                         });
 
                         if (radioValue == LevellingType.simple) {
@@ -559,9 +571,18 @@ class LevellingState extends State<Levelling> {
                               'lowerStadia': lowerStadiaValue,
                               'digitalReading': digitalReadingValue,
                             };
-                            results = preciseLevelling(
+                            var compute = preciseLevelling(
                                 readFile(csvString), initialValues);
-                            dataHeadings = results[0];
+                            results = compute[0];
+                            print('results are $results');
+                            errorReport = compute[1];
+                            print('error report is $errorReport');
+                            var dh = compute[0][0];
+                            dataHeadings.clear();
+                            for (int i = 0; i < dh.length; i++) {
+                              dataHeadings.add(dh[i].toString());
+                            }
+                            print('data headings is $dataHeadings');
                             computationsDone = true;
                           });
                         }

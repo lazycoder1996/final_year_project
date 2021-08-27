@@ -129,12 +129,12 @@ class _HomePageState extends State<HomePage> {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => Traversing()));
                           }),
-                      itemCard(
-                          title: 'Testing',
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => Polygon()));
-                          })
+                      // itemCard(
+                      //     title: 'Testing',
+                      //     onPressed: () {
+                      //       Navigator.of(context).push(MaterialPageRoute(
+                      //           builder: (context) => Polygon()));
+                      //     })
                     ],
                   ),
                 ),

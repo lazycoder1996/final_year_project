@@ -1,4 +1,5 @@
 preciseLevelling(List<List<dynamic>> levelData, initialValues) {
+  DateTime startTime = DateTime.now();
   var headers = levelData[0].map((e) {
     return e.toString();
   }).toList();
@@ -63,5 +64,29 @@ preciseLevelling(List<List<dynamic>> levelData, initialValues) {
     // ignore: empty_catches
   } catch (e) {}
   print('result is $levelData');
-  return levelData;
+  List reportBM = [];
+  int n = 0;
+  for (var i = 1; i < levelData[0].length; i++) {
+    if (levelData[i].last != '') {
+      reportBM.add('-   ${levelData[i].first} (${levelData[i].last})');
+    }
+  }
+  String benchmarksIdentified = reportBM.join("\r\n");
+
+  DateTime endTime = DateTime.now();
+  DateTime duration = DateTime.fromMillisecondsSinceEpoch(
+      endTime.millisecondsSinceEpoch - startTime.millisecondsSinceEpoch);
+
+  return [
+    levelData,
+    {
+      'duration': duration.millisecond,
+      'Benchmarks identified': benchmarksIdentified,
+      'last bm': levelData.last[1].toString(),
+      'true final IRL': levelData[1].last.toString(),
+      'comp final IRL': levelData.last[9].toString(),
+      'Project Misclosue':
+          (num.parse(levelData.last[9]) - levelData[1].last).toStringAsFixed(3),
+    }
+  ];
 }

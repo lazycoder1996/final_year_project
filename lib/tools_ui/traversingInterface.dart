@@ -31,7 +31,6 @@ class _TraversingState extends State<Traversing> {
   List<List<dynamic>> traverseData = [];
   List<String> dataHeaders = [];
   bool changeBody = false;
-
   void putDropdownValues(List<dynamic> headers) {
     try {
       backsightDropdown = headers[0].toString();
@@ -396,6 +395,75 @@ class _TraversingState extends State<Traversing> {
                         Padding(
                             padding: EdgeInsets.all(20),
                             child: processButton(onPressed: () {
+                              showDialog(
+                                  barrierDismissible: false,
+                                  context: context,
+                                  builder: (context) => Container(
+                                        child: Center(
+                                          child: Theme(
+                                            data: ThemeData(
+                                                accentColor: Colors.white),
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                      ));
+
+                              Future.delayed(Duration(milliseconds: 250))
+                                  .then((value) {
+                                Navigator.of(context).pop(false);
+                                showDialog(
+                                    barrierDismissible: false,
+                                    context: context,
+                                    builder: (context) => doneProcessing(
+                                          context,
+                                          results: res,
+                                          errorReport: errorReport,
+                                          previewMapData: {
+                                            'columns': res[0].map((e) {
+                                              return e.toString();
+                                            }).toList(),
+                                            'rows': res.sublist(1)
+                                          },
+                                          fileName: _fileName,
+                                          reportFile: {
+                                            'filename': 'processing report.txt',
+                                            'data': 'Processing Report\r\n'
+                                                    'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n'
+                                                    'Duration: ${errorReport['duration']} ms\r\n\r\n'
+                                                    'Points of depature\r\n'
+                                                    '${errorReport['departure']}\r\n'
+                                                    'Points of closure\r\n'
+                                                    '${errorReport['closure']}\r\n\r\n'
+                                                    'Arithmetic check\r\n'
+                                                    'Number of instrument station: ${errorReport['setup']}\r\n' +
+                                                (typeOfTraverseDropdown ==
+                                                        'Closed Loop'
+                                                    ? 'Observed final bearing :${errorReport['observed final bearing']}\r\n'
+                                                    : 'Observed sum of included angles: ${errorReport['observed sum angles']}\r\n') +
+                                                (typeOfTraverseDropdown ==
+                                                        'Closed Loop'
+                                                    ? 'Expected final bearing :${errorReport['expected final bearing']}\r\n'
+                                                    : 'Expected sum of included angles: ${errorReport['expected sum angles']}\r\n') +
+                                                'Error: ${errorReport['error']}\r\n' +
+                                                (typeOfTraverseDropdown ==
+                                                        'Closed Loop'
+                                                    ? ''
+                                                    : 'Adjustment per station: ${errorReport['adj per station']}\r\n\r\n') +
+                                                'Misclosure\r\n'
+                                                    'Method of adjusting coordinates: ${errorReport['adj By']}\r\n'
+                                                    'Observed sum of departures: ${errorReport['sum of dep']}\r\n'
+                                                    'Expected sum of depatures: ${errorReport['exp sum of dep']}\r\n'
+                                                    'Error in departure: ${errorReport['error in dep']}\r\n'
+                                                    'Observed sum of latitudes: ${errorReport['sum of lat']}\r\n'
+                                                    'Expected sum of latitudes: ${errorReport['exp sum of lat']}\r\n'
+                                                    'Error in latitude: ${errorReport['error in lat']}\r\n'
+                                                    'Observed sum of distances: ${errorReport['sum dist']}\r\n'
+                                                    'Linear misclose: ${errorReport['linear misclose']}\r\n'
+                                                    'Fractional misclose: ${errorReport['fractional misclose']}'
+                                          },
+                                        ));
+                              });
+
                               print('traverse data is $traverseData');
                               print(
                                   'type of traverse is $typeOfTraverseDropdown');
@@ -416,6 +484,11 @@ class _TraversingState extends State<Traversing> {
                                       });
                                   res = results[0];
                                   errorReport = results[1];
+                                  for (var i in results[0][0]) {
+                                    dataHeaders.add(i.toString());
+                                  }
+                                  print('data headers: $dataHeaders');
+                                  // dataHeadings = results[0][0];
                                 } else {
                                   print('loop traverse');
                                   print('backsight data: $backsightData');
@@ -432,70 +505,75 @@ class _TraversingState extends State<Traversing> {
                                       });
                                   res = results[0];
                                   errorReport = results[1];
+                                  for (var i in results[0][0]) {
+                                    dataHeaders.add(i.toString());
+                                  }
+                                  print('data headers: $dataHeaders');
+                                  print('res: $res');
                                 }
-                                print('report is $errorReport');
-                                var result = ListToCsvConverter().convert(res);
+                                // print('report is $errorReport');
+                                // var result = ListToCsvConverter().convert(res);
 
-                                download(
-                                    addFilesToZip(
-                                      reportFile: {
-                                        'filename': 'processing report.txt',
-                                        'data': 'Processing Report\r\n'
-                                                'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n'
-                                                'Duration: ${errorReport['duration']} ms\r\n\r\n'
-                                                'Points of depature\r\n'
-                                                '${errorReport['departure']}\r\n'
-                                                'Points of closure\r\n'
-                                                '${errorReport['closure']}\r\n\r\n'
-                                                'Arithmetic check\r\n'
-                                                'Number of instrument station: ${errorReport['setup']}\r\n' +
-                                            (typeOfTraverseDropdown ==
-                                                    'Closed Loop'
-                                                ? 'Observed final bearing :${errorReport['observed final bearing']}\r\n'
-                                                : 'Observed sum of included angles: ${errorReport['observed sum angles']}\r\n') +
-                                            (typeOfTraverseDropdown ==
-                                                    'Closed Loop'
-                                                ? 'Expected final bearing :${errorReport['expected final bearing']}\r\n'
-                                                : 'Expected sum of included angles: ${errorReport['expected sum angles']}\r\n') +
-                                            'Error: ${errorReport['error']}\r\n' +
-                                            (typeOfTraverseDropdown ==
-                                                    'Closed Loop'
-                                                ? ''
-                                                : 'Adjustment per station: ${errorReport['adj per station']}\r\n\r\n') +
-                                            'Misclosure\r\n'
-                                                'Method of adjusting coordinates: ${errorReport['adj By']}\r\n'
-                                                'Observed sum of departures: ${errorReport['sum of dep']}\r\n'
-                                                'Expected sum of depatures: ${errorReport['exp sum of dep']}\r\n'
-                                                'Error in departure: ${errorReport['error in dep']}\r\n'
-                                                'Observed sum of latitudes: ${errorReport['sum of lat']}\r\n'
-                                                'Expected sum of latitudes: ${errorReport['exp sum of lat']}\r\n'
-                                                'Error in latitude: ${errorReport['error in lat']}\r\n'
-                                                'Observed sum of distances: ${errorReport['sum dist']}\r\n'
-                                                'Linear misclose: ${errorReport['linear misclose']}\r\n'
-                                                'Fractional misclose: ${errorReport['fractional misclose']}'
-                                      },
-                                      csvFile: {
-                                        'data': result,
-                                        'filename': 'processed data.csv'
-                                      },
-                                    ),
-                                    downloadName:
-                                        '${_fileName.split(".")[0]} result.zip');
+                                // download(
+                                //     addFilesToZip(
+                                //       reportFile: {
+                                //         'filename': 'processing report.txt',
+                                //         'data': 'Processing Report\r\n'
+                                //                 'Date: ${DateFormat.yMEd().add_jms().format(DateTime.now())}\r\n'
+                                //                 'Duration: ${errorReport['duration']} ms\r\n\r\n'
+                                //                 'Points of depature\r\n'
+                                //                 '${errorReport['departure']}\r\n'
+                                //                 'Points of closure\r\n'
+                                //                 '${errorReport['closure']}\r\n\r\n'
+                                //                 'Arithmetic check\r\n'
+                                //                 'Number of instrument station: ${errorReport['setup']}\r\n' +
+                                //             (typeOfTraverseDropdown ==
+                                //                     'Closed Loop'
+                                //                 ? 'Observed final bearing :${errorReport['observed final bearing']}\r\n'
+                                //                 : 'Observed sum of included angles: ${errorReport['observed sum angles']}\r\n') +
+                                //             (typeOfTraverseDropdown ==
+                                //                     'Closed Loop'
+                                //                 ? 'Expected final bearing :${errorReport['expected final bearing']}\r\n'
+                                //                 : 'Expected sum of included angles: ${errorReport['expected sum angles']}\r\n') +
+                                //             'Error: ${errorReport['error']}\r\n' +
+                                //             (typeOfTraverseDropdown ==
+                                //                     'Closed Loop'
+                                //                 ? ''
+                                //                 : 'Adjustment per station: ${errorReport['adj per station']}\r\n\r\n') +
+                                //             'Misclosure\r\n'
+                                //                 'Method of adjusting coordinates: ${errorReport['adj By']}\r\n'
+                                //                 'Observed sum of departures: ${errorReport['sum of dep']}\r\n'
+                                //                 'Expected sum of depatures: ${errorReport['exp sum of dep']}\r\n'
+                                //                 'Error in departure: ${errorReport['error in dep']}\r\n'
+                                //                 'Observed sum of latitudes: ${errorReport['sum of lat']}\r\n'
+                                //                 'Expected sum of latitudes: ${errorReport['exp sum of lat']}\r\n'
+                                //                 'Error in latitude: ${errorReport['error in lat']}\r\n'
+                                //                 'Observed sum of distances: ${errorReport['sum dist']}\r\n'
+                                //                 'Linear misclose: ${errorReport['linear misclose']}\r\n'
+                                //                 'Fractional misclose: ${errorReport['fractional misclose']}'
+                                //       },
+                                //       csvFile: {
+                                //         'data': result,
+                                //         'filename': 'processed data.csv'
+                                //       },
+                                //     ),
+                                //     downloadName:
+                                //         '${_fileName.split(".")[0]} result.zip');
                               });
-                              List<Point> points = [];
-                              try {
-                                for (int i = 0; i <= res.length; i++) {
-                                  var coord = errorReport['coordinates'];
-                                  var maxE = maximum(coord[0]);
-                                  var maxY = maximum(coord[1]);
-                                  points.add(Point(((coord[0][i]) / maxE) * 10,
-                                      ((coord[1][i]) / maxY) * 10));
-                                }
-                              } catch (e) {}
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Polygon(
-                                      points: points,
-                                      type: typeOfTraverseDropdown)));
+                              // List<Point> points = [];
+                              // try {
+                              //   for (int i = 0; i <= res.length; i++) {
+                              //     var coord = errorReport['coordinates'];
+                              //     var maxE = maximum(coord[0]);
+                              //     var maxY = maximum(coord[1]);
+                              //     points.add(Point(((coord[0][i]) / maxE) * 10,
+                              //         ((coord[1][i]) / maxY) * 10));
+                              //   }
+                              // } catch (e) {}
+                              // Navigator.of(context).push(MaterialPageRoute(
+                              //     builder: (context) => Polygon(
+                              //         points: points,
+                              //         type: typeOfTraverseDropdown)));
                             }))
                     ],
                   ),

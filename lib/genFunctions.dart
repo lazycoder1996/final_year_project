@@ -65,6 +65,13 @@ Widget doneProcessing(BuildContext context,
     title: Text('Results are ready!'),
     actions: [
       Tooltip(
+        textStyle: TextStyle(fontSize: 16, color: Colors.white),
+        height: 30,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          // gradient:
+          //     const LinearGradient(colors: <Color>[Colors.amber, Colors.red]),
+        ),
         message: 'Preview results',
         waitDuration: Duration(milliseconds: 500),
         child: IconButton(
@@ -103,8 +110,15 @@ Widget doneProcessing(BuildContext context,
         ),
       ),
       Tooltip(
+        textStyle: TextStyle(fontSize: 16, color: Colors.white),
+        height: 30,
         message: 'Download results',
         waitDuration: Duration(milliseconds: 500),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          // gradient:
+          //     const LinearGradient(colors: <Color>[Colors.amber, Colors.red]),
+        ),
         child: IconButton(
             icon: Icon(Icons.file_download, color: Colors.green),
             onPressed: () {
@@ -127,7 +141,14 @@ Widget doneProcessing(BuildContext context,
             }),
       ),
       Tooltip(
+        textStyle: TextStyle(fontSize: 16, color: Colors.white),
+        height: 30,
         message: 'Cancel',
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          // gradient:
+          //     const LinearGradient(colors: <Color>[Colors.amber, Colors.red]),
+        ),
         waitDuration: Duration(milliseconds: 500),
         child: IconButton(
             icon: Icon(

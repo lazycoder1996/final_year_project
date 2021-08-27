@@ -26,46 +26,46 @@ PreferredSizeWidget myAppBar() {
               backgroundColor: MaterialStateProperty.all<Color>(Colors.teal)),
           onPressed: () {},
         ),
-        TextButton(
-          style: ButtonStyle(
-              textStyle: MaterialStateProperty.resolveWith(
-                  (Set<MaterialState> states) {
-                if (states.contains(MaterialState.hovered))
-                  return TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Medieval');
-                return TextStyle(fontSize: 18, fontFamily: 'Inika');
-              }),
-              foregroundColor: MaterialStateProperty.resolveWith(
-                  ((Set<MaterialState> states) {
-                if (states.contains(MaterialState.hovered)) return Colors.black;
-                return Colors.white;
-              })),
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.teal)),
-          child: Text('ABOUT'),
-          onPressed: () {},
-        ),
-        TextButton(
-          style: ButtonStyle(
-              textStyle: MaterialStateProperty.resolveWith(
-                  (Set<MaterialState> states) {
-                if (states.contains(MaterialState.hovered))
-                  return TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Medieval');
-                return TextStyle(fontSize: 18, fontFamily: 'Inika');
-              }),
-              foregroundColor: MaterialStateProperty.resolveWith(
-                  ((Set<MaterialState> states) {
-                if (states.contains(MaterialState.hovered)) return Colors.black;
-                return Colors.white;
-              })),
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.teal)),
-          child: Text('CONTACT US'),
-          onPressed: () {},
-        ),
+        // TextButton(
+        //   style: ButtonStyle(
+        //       textStyle: MaterialStateProperty.resolveWith(
+        //           (Set<MaterialState> states) {
+        //         if (states.contains(MaterialState.hovered))
+        //           return TextStyle(
+        //               fontSize: 20,
+        //               fontWeight: FontWeight.bold,
+        //               fontFamily: 'Medieval');
+        //         return TextStyle(fontSize: 18, fontFamily: 'Inika');
+        //       }),
+        //       foregroundColor: MaterialStateProperty.resolveWith(
+        //           ((Set<MaterialState> states) {
+        //         if (states.contains(MaterialState.hovered)) return Colors.black;
+        //         return Colors.white;
+        //       })),
+        //       backgroundColor: MaterialStateProperty.all<Color>(Colors.teal)),
+        //   child: Text('ABOUT'),
+        //   onPressed: () {},
+        // ),
+        // TextButton(
+        //   style: ButtonStyle(
+        //       textStyle: MaterialStateProperty.resolveWith(
+        //           (Set<MaterialState> states) {
+        //         if (states.contains(MaterialState.hovered))
+        //           return TextStyle(
+        //               fontSize: 20,
+        //               fontWeight: FontWeight.bold,
+        //               fontFamily: 'Medieval');
+        //         return TextStyle(fontSize: 18, fontFamily: 'Inika');
+        //       }),
+        //       foregroundColor: MaterialStateProperty.resolveWith(
+        //           ((Set<MaterialState> states) {
+        //         if (states.contains(MaterialState.hovered)) return Colors.black;
+        //         return Colors.white;
+        //       })),
+        //       backgroundColor: MaterialStateProperty.all<Color>(Colors.teal)),
+        //   child: Text('CONTACT US'),
+        //   onPressed: () {},
+        // ),
         TextButton(
           style: ButtonStyle(
               textStyle: MaterialStateProperty.resolveWith(
