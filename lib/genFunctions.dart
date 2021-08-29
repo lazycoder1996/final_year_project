@@ -79,6 +79,11 @@ Widget doneProcessing(BuildContext context,
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
+                floatingActionButton: FloatingActionButton.extended(
+                  label: Text('Plot'),
+                  onPressed: () {},
+                  icon: Icon(Icons.pie_chart_outline_outlined),
+                ),
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

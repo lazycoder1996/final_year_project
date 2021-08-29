@@ -126,7 +126,7 @@ class LevellingState extends State<Levelling> {
     Size size = MediaQuery.of(context).size;
     EdgeInsets padding = EdgeInsets.only(top: 20, left: 20);
     return Scaffold(
-        appBar: myAppBar(),
+        appBar: myAppBar(context),
         body: Container(
           width: size.width,
           child: SingleChildScrollView(

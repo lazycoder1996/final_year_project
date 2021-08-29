@@ -1,3 +1,4 @@
+import 'package:final_project/screens/documentation.dart';
 import 'package:final_project/screens/homepage.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 elevation: 0.0),
             primarySwatch: Colors.teal),
-        home: HomePage(),
+        home: Documentation(),
         title: "Geomatic ",
       );
 }

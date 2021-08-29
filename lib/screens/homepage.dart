@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     Size size = MediaQuery.of(context).size;
     print('height ${size.height}: width ${size.width}');
     return Scaffold(
-      appBar: myAppBar(),
+      appBar: myAppBar(context),
       body: SafeArea(
         child: Scrollbar(
           isAlwaysShown: true,

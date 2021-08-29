@@ -126,7 +126,7 @@ class _TraversingState extends State<Traversing> {
     EdgeInsets padding = EdgeInsets.only(top: 20, left: 20);
 
     return Scaffold(
-        appBar: myAppBar(),
+        appBar: myAppBar(context),
         body: showProcessedResults == true
             ? resultPage(
                 dataColumns: dataColumns,

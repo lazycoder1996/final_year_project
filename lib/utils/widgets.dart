@@ -1,6 +1,8 @@
+import 'package:final_project/screens/documentation.dart';
+import 'package:final_project/screens/homepage.dart';
 import 'package:flutter/material.dart';
 
-PreferredSizeWidget myAppBar() {
+PreferredSizeWidget myAppBar(BuildContext context) {
   return AppBar(
     automaticallyImplyLeading: false,
     title: Row(
@@ -24,7 +26,10 @@ PreferredSizeWidget myAppBar() {
                 return Colors.white;
               })),
               backgroundColor: MaterialStateProperty.all<Color>(Colors.teal)),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => HomePage()));
+          },
         ),
         // TextButton(
         //   style: ButtonStyle(
@@ -84,7 +89,10 @@ PreferredSizeWidget myAppBar() {
               })),
               backgroundColor: MaterialStateProperty.all<Color>(Colors.teal)),
           child: Text('DOCUMENTATION'),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context)
+                .push(MaterialPageRoute(builder: (context) => Documentation()));
+          },
         ),
       ],
     ),

@@ -31,6 +31,7 @@ dependencies:
   intl: ^0.17.0
   responsive_framework: ^0.1.4
   flutter_plot: ^0.1.0
+  video_player: ^2.1.14
   flutter:
     sdk: flutter
 

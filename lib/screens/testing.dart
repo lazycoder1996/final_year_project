@@ -12,7 +12,7 @@ class Polygon extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      appBar: myAppBar(),
+      appBar: myAppBar(context),
       // body: Padding(
       //   padding: const EdgeInsets.all(20.0),
       //   child: ClipPath(
