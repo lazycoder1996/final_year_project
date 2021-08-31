@@ -58,17 +58,14 @@ class _DocumentationState extends State<Documentation> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               expansionTile(title: 'Levelling', children: levelling),
-              ExpansionTile(
-                title: Text('Types of Levelling'),
-              ),
+              expansionTile(
+                  title: 'Types of Levelling', children: typesOfLevelling),
               expansionTile(
                   title: 'Application of Levelling',
                   children: applicationsOfLevelling),
               expansionTile(title: 'Traversing', children: traversing),
-              Container(),
-              ExpansionTile(
-                title: Text('Types of Traversing'),
-              ),
+              expansionTile(
+                  title: 'Types of Traversing', children: typesOfTraversing),
               expansionTile(
                   title: 'Application of Traversing',
                   children: applicationsOfTraversing),
