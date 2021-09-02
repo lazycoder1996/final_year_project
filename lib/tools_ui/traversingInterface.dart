@@ -417,6 +417,7 @@ class _TraversingState extends State<Traversing> {
                                     builder: (context) => doneProcessing(
                                           context,
                                           results: res,
+                                          plot: false,
                                           errorReport: errorReport,
                                           previewMapData: {
                                             'columns': res[0].map((e) {

@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:final_project/screens/testing.dart';
 import 'package:final_project/tools_ui/levellingInterface.dart';
 import 'package:final_project/tools_ui/traversingInterface.dart';
 import 'package:final_project/utils/widgets.dart';
@@ -54,34 +51,35 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: Scrollbar(
           isAlwaysShown: true,
+          showTrackOnHover: true,
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 400,
-                  child: Carousel(
-                      dotSize: 5.0,
-                      indicatorBgPadding: 5,
-                      dotBgColor: Colors.teal,
-                      showIndicator: true,
-                      autoplayDuration: Duration(seconds: 7),
-                      animationDuration: Duration(milliseconds: 400),
-                      animationCurve: Curves.easeInQuint,
-                      images: [
-                        Image(
-                            image: AssetImage(
-                          'images/theo.jpeg',
-                        )),
-                        Image(
-                            fit: BoxFit.fill,
-                            image: AssetImage(
-                              'images/survey_with_theo.jpg',
-                            )),
-                        Image(image: AssetImage('images/sekina.jpeg')),
-                        Image(image: AssetImage('images/field_work.jpg')),
-                      ]),
-                ),
+                // Container(
+                //   height: 400,
+                //   child: Carousel(
+                //       dotSize: 5.0,
+                //       indicatorBgPadding: 5,
+                //       dotBgColor: Colors.teal,
+                //       showIndicator: true,
+                //       autoplayDuration: Duration(seconds: 7),
+                //       animationDuration: Duration(milliseconds: 400),
+                //       animationCurve: Curves.easeInQuint,
+                //       images: [
+                //         Image(
+                //             image: AssetImage(
+                //           'images/theo.jpeg',
+                //         )),
+                //         Image(
+                //             fit: BoxFit.fill,
+                //             image: AssetImage(
+                //               'images/survey_with_theo.jpg',
+                //             )),
+                //         Image(image: AssetImage('images/sekina.jpeg')),
+                //         Image(image: AssetImage('images/field_work.jpg')),
+                //       ]),
+                // ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10.0),
                   child: Center(
@@ -99,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                   height: 5,
                 ),
                 Center(
-                    child: Text('You are few clicks away from enjoying...',
+                    child: Text('Please select an operation',
                         style: TextStyle(
                             fontSize: 26,
                             color: Colors.black87,
@@ -228,7 +226,7 @@ class _HomePageState extends State<HomePage> {
       padding: const EdgeInsets.all(20.0),
       child: Container(
         height: 200,
-        width: 300,
+        width: 250,
         child: ElevatedButton(
           onPressed: () {
             onPressed();
@@ -250,7 +248,7 @@ class _HomePageState extends State<HomePage> {
                       style: TextStyle(
                           fontSize: 25,
                           color: textColor,
-                          fontFamily: 'Berkshire'),
+                          fontFamily: 'Redressed'),
                     ),
                   )),
               SizedBox(

@@ -498,6 +498,7 @@ class LevellingState extends State<Levelling> {
                               builder: (context) => doneProcessing(context,
                                   results: results,
                                   errorReport: errorReport,
+                                  plot: false,
                                   previewMapData: {
                                     'columns': dataHeadings,
                                     'rows': results.sublist(1)

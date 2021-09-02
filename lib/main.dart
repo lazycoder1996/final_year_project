@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 elevation: 0.0),
             primarySwatch: Colors.teal),
-        home: Documentation(),
+        home: HomePage(),
         title: "Geomatic ",
       );
 }

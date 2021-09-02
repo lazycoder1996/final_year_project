@@ -1,5 +1,6 @@
 import 'package:csv/csv.dart';
 import 'package:file_access/file_access.dart';
+import 'package:final_project/results/simpleLevellingResults.dart';
 import 'package:final_project/utils/download.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -60,6 +61,9 @@ Widget doneProcessing(BuildContext context,
     Map<dynamic, dynamic> errorReport,
     Map<dynamic, dynamic> reportFile,
     Map<dynamic, dynamic> previewMapData,
+    String rksHeading,
+    String elevHeading,
+    bool plot,
     String fileName}) {
   return AlertDialog(
     title: Text('Results are ready!'),
@@ -79,11 +83,28 @@ Widget doneProcessing(BuildContext context,
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {
               return Scaffold(
-                floatingActionButton: FloatingActionButton.extended(
-                  label: Text('Plot'),
-                  onPressed: () {},
-                  icon: Icon(Icons.pie_chart_outline_outlined),
-                ),
+                floatingActionButton: plot
+                    ? FloatingActionButton.extended(
+                        label: Text('Plot'),
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(builder: (context) {
+                            // var elev =
+                            //     results[0].indexOf(results[0].length - 3);
+                            // var rks = results[0].indexOf(results[0].length - 2);
+                            return SimpleLevellingResults(
+                                remarks: results.sublist(1).map((e) {
+                                  return e[results[0].length - 2].toString();
+                                }).toList(),
+                                elevation: results.sublist(1).map((e) {
+                                  return num.parse(
+                                      e[results[0].length - 3].toString());
+                                }).toList());
+                          }));
+                        },
+                        icon: Icon(Icons.pie_chart_outline_outlined),
+                      )
+                    : SizedBox(),
                 body: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
